@@ -3,15 +3,15 @@ from fetch_data import fetch_data
 
 
 RECORDS_LIMIT = 300
-GRANULARITY = 3600
+GRANULARITY = 86400
 CURRENCY = "BTC/USD"
 
 # Minimum Amount of Data Required
-DAYS = 365
+DAYS = 365 * 2
 HOURS = 0
 
 num_seconds = (DAYS * 24 + HOURS) * 3600 # oldest data required in seconds
-iterations_required = int((num_seconds / GRANULARITY) / RECORDS_LIMIT + 1) 
+iterations_required = int(((num_seconds / GRANULARITY) / RECORDS_LIMIT))
 
 data = fetch_data(CURRENCY, GRANULARITY)
 for i in range(iterations_required):
