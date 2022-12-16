@@ -1,5 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
+import random as rand
 
 def calculate_rmse(y_true, y_pred):
     """
@@ -31,23 +32,56 @@ def split_data(data, split, window_size, random=False):
     testY = []
 
     if random:
-        train_vals = np.sample(range(window_size, data.shape[0]), split * data.shape[0])
+        train_vals = rand.sample(range(window_size, data.shape[0]), int(split * data.shape[0]))
         for i in train_vals:
-            trainX.append(data.iloc[i-window_size: i, 3])
-            trainY.append(data.iloc[i, 3])
+            trainX.append(data.iloc[i-window_size: i, 4])
+            trainY.append(data.iloc[i, 4])
         for i in range(window_size, data.shape[0]):
             if i not in train_vals:
-                testX.append(data.iloc[i-window_size: i, 3])
-                testY.append(data.iloc[i, 3])
+                testX.append(data.iloc[i-window_size: i, 4])
+                testY.append(data.iloc[i, 4])
 
     else:
-        for i in range(window_size, split * data.shape[0]):
-            trainX.append(data.iloc[i-window_size: i, 3])
-            trainY.append(data.iloc[i, 3])
+        for i in range(window_size, int(split * data.shape[0])):
+            trainX.append(data.iloc[i-window_size: i, 4])
+            trainY.append(data.iloc[i, 4])
 
-        for i in range(split * data.shape[0], data.shape[0]):
-            testX.append(data.iloc[i-window_size: i, 3])
-            testY.append(data.iloc[i, 3])
+        for i in range(int(split * data.shape[0]), data.shape[0]):
+            testX.append(data.iloc[i-window_size: i, 4])
+            testY.append(data.iloc[i, 4])
+
+    return np.array(trainX), np.array(trainY), np.array(testX), np.array(testY)
+
+def split_data_2(data, split, window_size, random=False):
+
+    """
+    assumes data is sorted by date in descending order. 
+    If random is false, returns the oldest dates for training 
+    recent ones for testing
+    """
+    trainX = []
+    trainY = []
+    testX = []
+    testY = []
+
+    if random:
+        train_vals = rand.sample(range(window_size, data.shape[0]), int(split * data.shape[0]))
+        for i in train_vals:
+            trainX.append(data.iloc[i-window_size: i, 4])
+            trainY.append(data.iloc[i, 4])
+        for i in range(window_size, data.shape[0]):
+            if i not in train_vals:
+                testX.append(data.iloc[i-window_size: i, 4])
+                testY.append(data.iloc[i, 4])
+
+    else:
+        for i in range(window_size, int(split * data.shape[0])):
+            trainX.append(data.iloc[i-window_size: i, 4])
+            trainY.append(data.iloc[i, 4] > data.iloc[i-window_size, 4])
+
+        for i in range(int(split * data.shape[0]), data.shape[0]):
+            testX.append(data.iloc[i-window_size: i, 4])
+            testY.append(data.iloc[i, 4] > data.iloc[i-window_size, 4])
 
     return np.array(trainX), np.array(trainY), np.array(testX), np.array(testY)
 

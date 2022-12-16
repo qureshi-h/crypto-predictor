@@ -42,7 +42,7 @@ def combine_maximums(maximums, threshold=.2):
     combined_maximas = [[0, 0, 0]]
     span = max(maximums, key=lambda x: x[0])[0] - min(maximums, key=lambda x: x[0])[0]
     for maxima in maximums:
-        if abs(maxima[0] - curr_maxima[0]) > threshold * span:
+        if abs(maxima[0] - curr_maxima[0]) > threshold * span :
             combined_maximas.append([curr_maxima[0], combined_maximas[-1][-1], maxima[1]])
             curr_maxima = maxima
         elif maxima[0] > curr_maxima[0]:
@@ -51,7 +51,7 @@ def combine_maximums(maximums, threshold=.2):
 
     i = 1
     while i < len(combined_maximas) - 1:
-        if abs(combined_maximas[i][0] - combined_maximas[i + 1][0]) < thresold * span:
+        if abs(combined_maximas[i][0] - combined_maximas[i + 1][0]) < threshold * span:
             combined_maximas[i + 1] = [max(combined_maximas[i][0], combined_maximas[i + 1][0]), 
                                                             combined_maximas[i][1], 
                                                             combined_maximas[i + 1][2]]
@@ -73,7 +73,7 @@ def combine_minimums(minimums, threshold=0.2):
     combined_minimas = [[0, 0, 0]]
     span = max(minimums, key=lambda x: x[0])[0] - min(minimums, key=lambda x: x[0])[0]
     for minima in minimums:
-        if abs(minima[0] - curr_minima[0]) > threshold * span:
+        if abs(minima[0] - curr_minima[0]) > threshold * span / 2:
             combined_minimas.append([curr_minima[0], combined_minimas[-1][-1], minima[1]])
             curr_minima = minima
         elif minima[0] < curr_minima[0]:
@@ -82,7 +82,7 @@ def combine_minimums(minimums, threshold=0.2):
 
     i = 1
     while i < len(combined_minimas) - 1:
-        if abs(combined_minimas[i][0] - combined_minimas[i + 1][0]) < thresold * span:
+        if abs(combined_minimas[i][0] - combined_minimas[i + 1][0]) < threshold * span:
             combined_minimas[i + 1] = [min(combined_minimas[i][0], combined_minimas[i + 1][0]), 
                                                             combined_minimas[i][1], 
                                                             combined_minimas[i + 1][2]]
@@ -112,17 +112,33 @@ def find_support_resistance(data):
 
     '''
     find the resistance and support levels'''
+
+    threshold = 0.3
     minimums, maximums = find_poi(data)
 
-    maximums = combine_maximums(maximums)
-    minimums = combine_minimums(minimums)
+    combined_minimums = combine_minimums(minimums, threshold)
+    combined_maximums = combine_maximums(maximums, threshold)
 
-    plot_points(data, minimums, maximums)
+    min_len = min(len(combined_minimums), len(combined_maximums))
+    while len(combined_maximums) > min_len:
+        threshold += 0.001
+        combined_maximums = combine_maximums(combined_maximums, threshold)
+
+    min_len = min(len(combined_minimums), len(combined_maximums))
+
+    while len(combined_minimums) > min_len:
+        threshold += 0.01
+        combined_minimums = combine_minimums(minimums, threshold)
+
+    print(threshold)
+    
+
+    plot_points(data, combined_minimums, combined_maximums)
 
 
-if __name__ == "main":
+if __name__ == "__main__":
 
-    df = pd.read_csv("last_2_years.csv", header=0)
+    df = pd.read_csv("last_90_days.csv", header=0)
 
     # df = df.sort_values(by="date").reset_index()
     df = df["close"]
