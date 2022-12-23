@@ -5,7 +5,7 @@ from fetch_data import fetch_data
 RECORDS_LIMIT = 300
 GRANULARITY = 86400
 
-COIN = "DOGE"
+COIN = "BTC"
 CURRENCY = "USD"
 CODE = f'{COIN}/{CURRENCY}'
 

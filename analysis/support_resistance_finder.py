@@ -102,12 +102,12 @@ def plot(data, minimums, maximums, treadlines=True, levels=True):
 
     data.plot()
     
-    if treadlines:
-        plot_treadlines(maximums)
-
     if levels:
         plot_points(data, minimums, maximums)
     
+    if treadlines:
+        plot_treadlines(maximums)
+
     plt.show()
 
         
@@ -117,22 +117,21 @@ def plot_points(df, minimums, maximums):
     plots the data points as well as the resistance and support levels
     '''
 
-    minimums[-1][-1] = maximums[-1][-1] = df.shape[0]
+    minimums[-1][2] = maximums[-1][2] = df.shape[0]
 
     for minima in minimums:
         plt.hlines(minima[0], minima[1], minima[2], colors="red")
     for maxima in maximums:
         plt.hlines(maxima[0], maxima[1], maxima[2], colors="green")
 
-    plt.show()
-
 
 def find_support_resistance(data):
 
     '''
-    find the resistance and support levels'''
+    find the resistance and support levels
+    '''
 
-    threshold = 0.17
+    threshold = 0.22
     minimums, maximums = find_poi(data)
 
     combined_minimums = combine_minimums(minimums, threshold)
@@ -157,7 +156,7 @@ def find_support_resistance(data):
             break
 
     print(threshold)
-    plot(data, combined_minimums, combined_maximums)
+    plot(data, combined_minimums, combined_maximums, True, False)
     
 
 
@@ -168,7 +167,7 @@ def plot_treadlines(maximums):
 
 if __name__ == "__main__":
 
-    df = pd.read_csv("last_2_years.csv", header=0)
+    df = pd.read_csv("BTC_last_90_days.csv", header=0)
 
     df = df.sort_values(by="date").reset_index()
     df = df["close"]
