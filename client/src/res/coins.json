@@ -1,0 +1,7 @@
+{
+    "data": [
+        { "name": "BTC", "label": "BITCOIN" },
+        { "name": "ETH", "label": "ETHERIUM" },
+        { "name": "DOGE", "label": "DOGE" }
+    ]
+}

@@ -1,0 +1,251 @@
+html,
+body {
+    min-width: 100%;
+}
+
+/* Fonts */
+
+@font-face {
+    font-family: "Soda Berry";
+    src: local("Soda Berry"),
+        url(./res/fonts/SodaBerry-PK56g.ttf) format("truetype");
+}
+/*
+@font-face {
+    font-family: "DoodlePenLimited";
+    src: local("DoodlePenLimited"),
+        url(./res/fonts/DoodlePen_Limited.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "vtks Lemon Drop";
+    src: local("vtks Lemon Drop"),
+        url(./res/fonts/Vtks\Lemon\Drop.ttf) format("truetype");
+} */
+
+@font-face {
+    font-family: "Progress";
+    src: local("Progress"),
+        url(./res/fonts/ProgressPersonalUse-EaJdz.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "Montserrat";
+    src: local("Montserrat"),
+        url(./res/fonts/MontserratBlack-3zOvZ.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "MontserratL";
+    src: local("MontserratL"),
+        url(./res/fonts/MontserratLight-6YemM.otf) format("opentype");
+}
+
+h1 {
+    font-family: "Progress", "Progress";
+    font-size: 3.5rem;
+    font-weight: 500;
+    color: black;
+}
+
+h2 {
+    font-family: "DoodlePenLimited", sans-serif;
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: black;
+}
+
+h3 {
+    font-family: "Soda Berry", sans-serif;
+    font-size: 2rem;
+    font-weight: 300;
+    color: white;
+}
+
+h4 {
+    font-family: "vtks Lemon Drop", sans-serif;
+    font-size: 1.2rem;
+    font-weight: 100;
+    color: white;
+}
+
+p {
+    font-family: "Sequel", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 100;
+    color: white;
+}
+
+/* Select Page */
+.background {
+    top: 0;
+    left: 0;
+    display: inline-flex;
+    background-image: url("res/background.jpeg");
+    background-size: cover;
+    height: 100vh;
+    width: 100vw;
+    opacity: 100%;
+    position: absolute;
+    z-index: -1;
+}
+
+.selectPage {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    justify-content: center;
+    align-items: center;
+}
+
+.selectCoin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.selectBox {
+    width: 27vw;
+    text-indent: 1.5rem;
+    font-size: 1rem;
+    font-family: "Montserrat", sans-serif;
+    color: black;
+    text-align: center;
+}
+
+.selectCoinButton {
+    height: 5.5vh;
+}
+
+/* Select Granularity Page */
+.selectGranularity {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    justify-content: center;
+    margin-top: 20vh;
+}
+
+.overlay {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.sliderBox {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.backButton {
+    font-size: 1.1rem;
+    color: white;
+    margin: 0;
+}
+
+.backButton:hover {
+    text-decoration: underline;
+}
+
+.granluarityText {
+    text-align: center;
+    font-size: 1.4rem;
+    color: rgb(13, 239, 186);
+}
+
+.datePicker {
+    margin-top: 10vh;
+}
+
+@media screen and (max-width: 1200px) {
+    html {
+        font-size: 100%;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    html {
+        font-size: 95%;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    html {
+        font-size: 90%;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    html {
+        font-size: 85%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    html {
+        font-size: 80%;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    html {
+        font-size: 75%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    html {
+        font-size: 62%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    body {
+        -webkit-text-size-adjust: none;
+    }
+    html {
+        font-size: 55%;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    body {
+        -webkit-text-size-adjust: none;
+    }
+    html {
+        font-size: 45%;
+    }
+}
+
+@media screen and (max-width: 300px) {
+    body {
+        -webkit-text-size-adjust: none;
+    }
+    html {
+        font-size: 45%;
+    }
+}
+
+@media screen and (max-width: 200px) {
+    html {
+        font-size: 40%;
+    }
+}
+
+@media screen and (max-width: 100px) {
+    html {
+        font-size: 30%;
+    }
+}
