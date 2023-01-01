@@ -10,7 +10,7 @@ body {
     src: local("Soda Berry"),
         url(./res/fonts/SodaBerry-PK56g.ttf) format("truetype");
 }
-/*
+
 @font-face {
     font-family: "DoodlePenLimited";
     src: local("DoodlePenLimited"),
@@ -20,8 +20,8 @@ body {
 @font-face {
     font-family: "vtks Lemon Drop";
     src: local("vtks Lemon Drop"),
-        url(./res/fonts/Vtks\Lemon\Drop.ttf) format("truetype");
-} */
+        url(./res/fonts/VtksLemonDrop.ttf) format("truetype");
+}
 
 @font-face {
     font-family: "Progress";
@@ -129,7 +129,7 @@ p {
 }
 
 .overlay {
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
     width: 100vw;
     height: 100vh;
     position: absolute;
@@ -167,6 +167,35 @@ p {
 
 .datePicker {
     margin-top: 10vh;
+}
+
+.message {
+    position: absolute;
+    right: 7vw;
+    width: 25vw;
+    margin-top: 30vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
+    padding: 1em;
+}
+
+.message h2 {
+    color: white;
+    font-size: 1.1rem;
+    font-family: "MontserratL", sans-serif;
+}
+
+.continue {
+    position: absolute;
+    right: 7vw;
+    margin-top: 50vh;
+    color: yellow;
+    font-size: 1.5rem;
+    text-align: right;
+    cursor: pointer;
+}
+
+.continue:hover {
+    text-decoration: underline;
 }
 
 @media screen and (max-width: 1200px) {

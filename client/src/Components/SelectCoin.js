@@ -1,10 +1,15 @@
 import React from "react";
 import Select from "react-select";
-import coins from "../res/coins.json";
 import Button from "@mui/material/Button";
 
-export const SelectCoin = ({ currentCoin, setCurrentCoin, handleGo }) => {
-    const [disabled, setDisabled] = React.useState(false);
+export const SelectCoin = ({ coins, currentCoin, setCurrentCoin, handleGo }) => {
+    const [disabled, setDisabled] = React.useState(true);
+    const coins_obj = Object.values(
+        Object.keys(coins).reduce(function(acc, curr, i) {
+            acc[i] = { name: curr, label: curr };
+            return acc;
+        }, {})
+    );
 
     const colourStyles = {
         control: (styles) => ({
@@ -39,8 +44,11 @@ export const SelectCoin = ({ currentCoin, setCurrentCoin, handleGo }) => {
             <div className="selectCoin">
                 <Select
                     className="selectBox"
-                    options={coins.data}
-                    onChange={(option) => setCurrentCoin(option.name)}
+                    options={coins_obj}
+                    onChange={(option) => {
+                        setDisabled(false);
+                        setCurrentCoin(option.name);
+                    }}
                     styles={colourStyles}
                     placeholder={currentCoin}
                 />

@@ -68,9 +68,7 @@ export default function DiscreteSliderMarks({ setGranularity, handleDone }) {
                         valueLabelDisplay="off"
                         marks={marks}
                         max={5}
-                        onChange={(value) => {
-                            setGranularity(value);
-                        }}
+                        onChange={(value) => setGranularity(value.target.value)}
                         onChangeCommitted={handleDone}
                     />
                 </Box>

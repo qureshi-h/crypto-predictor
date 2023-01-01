@@ -5,15 +5,27 @@ import { DatePickerStart } from "../Components/DatePickerStart";
 import { DatePickerEnd } from "../Components/DatePickerEnd";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { AnimatePresence, motion as m } from "framer-motion/dist/framer-motion";
+import { useNavigate } from "react-router-dom";
+import coins from "../res/coins.json";
+
+const GRANULARITIES = { 0: 60, 1: 300, 2: 900, 3: 3600, 4: 21600, 5: 84600 };
+const MAX_RECORDS = 50 * 300;
 
 export const SelectPage = () => {
-    const [state, setState] = React.useState(1);
+    const [state, setState] = React.useState(0);
     const [granularity, setGranularity] = React.useState(1);
     const [currentCoin, setCurrentCoin] = React.useState(
         "Select A Coin To Begin"
     );
     const [selectedStart, setSelectedStart] = React.useState(null);
     const [selectedEnd, setSelectedEnd] = React.useState(null);
+    const [showMessage, setshowMessage] = React.useState(false);
+    const [recordsRequested, setRecordsRequested] = React.useState(0);
+    const navigate = useNavigate();
+
+    const sleep = (milliseconds) => {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds));
+    };
 
     const handleGo = () => {
         setState(1);
@@ -27,14 +39,39 @@ export const SelectPage = () => {
         setState(state + 1);
     };
 
-    const handleStart = (date) => {
+    const handleStart = async (date) => {
         setSelectedStart(date);
-        setState(state + 1);
+        if (date) {
+            await sleep(200);
+            setState(state + 1);
+        }
     };
 
     const handleEnd = (date) => {
         setSelectedEnd(date);
-        // setState(state + 1);
+        setshowMessage(false);
+
+        if (date) {
+            setshowMessage(true);
+            setRecordsRequested(
+                Math.round(
+                    Math.abs(date - selectedStart) /
+                        1000 /
+                        GRANULARITIES[granularity]
+                )
+            );
+        }
+    };
+
+    const handleContinue = () => {
+        navigate("/analysis", {
+            state: {
+                coin: coins[currentCoin],
+                granularity: GRANULARITIES[granularity],
+                start_date: selectedStart.getTime(),
+                end_date: selectedEnd.getTime(),
+            },
+        });
     };
 
     return (
@@ -51,7 +88,7 @@ export const SelectPage = () => {
                     exit={{ opacity: 1 }}
                 >
                     <SelectCoin
-                        {...{ currentCoin, setCurrentCoin, handleGo }}
+                        {...{ coins, currentCoin, setCurrentCoin, handleGo }}
                     />
                 </m.div>
             ) : (
@@ -61,10 +98,15 @@ export const SelectPage = () => {
                         key="background1"
                         initial={{ y: "27vh" }}
                         animate={{ y: "0vh" }}
-                        transition={{ ease: "easeIn", duration: 0.5 }}
+                        transition={{ ease: "easeOut", duration: 0.75 }}
                     >
                         <SelectCoin
-                            {...{ currentCoin, setCurrentCoin, handleGo }}
+                            {...{
+                                coins,
+                                currentCoin,
+                                setCurrentCoin,
+                                handleGo,
+                            }}
                         />
                     </m.div>
 
@@ -74,7 +116,7 @@ export const SelectPage = () => {
                             key="overlay"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            transition={{ ease: "easeIn", duration: 1 }}
+                            transition={{ ease: "easeOut", duration: 1 }}
                             // exit={{
                             //     x: "100vw",
                             //     transition: {
@@ -109,7 +151,7 @@ export const SelectPage = () => {
                                 zIndex: 100,
                             }}
                         >
-                            <h2 className="backButton">Back</h2>
+                            {/* <h2 className="backButton">Back</h2> */}
                         </ArrowBackIosNewIcon>
                     </m.div>
 
@@ -170,29 +212,59 @@ export const SelectPage = () => {
 
                     <AnimatePresence>
                         {state === 3 && (
-                            <m.div
-                                className="sliderBox"
-                                key="endDate"
-                                initial={{ y: "100vw" }}
-                                animate={{ y: "0vw" }}
-                                transition={{ ease: "easeIn", duration: 0.5 }}
-                                exit={{
-                                    x: "100vw",
-                                    transition: {
+                            <>
+                                <m.div
+                                    className="sliderBox"
+                                    key="endDate"
+                                    initial={{ y: "100vw" }}
+                                    animate={{ y: "0vw" }}
+                                    transition={{
                                         ease: "easeIn",
                                         duration: 0.5,
-                                    },
-                                }}
-                            >
-                                <DatePickerEnd
-                                    {...{
-                                        selectedEnd,
-                                        handleBack,
-                                        handleEnd,
-                                        selectedStart,
                                     }}
-                                />
-                            </m.div>
+                                    exit={{
+                                        x: "100vw",
+                                        transition: {
+                                            ease: "easeIn",
+                                            duration: 0.5,
+                                        },
+                                    }}
+                                >
+                                    <DatePickerEnd
+                                        {...{
+                                            selectedEnd,
+                                            handleEnd,
+                                            selectedStart,
+                                        }}
+                                    />
+                                </m.div>
+
+                                {showMessage && (
+                                    <>
+                                        <div className="message">
+                                            <h2>
+                                                Requesting {recordsRequested}{" "}
+                                                data points...
+                                            </h2>
+                                            {recordsRequested > MAX_RECORDS && (
+                                                <h2>
+                                                    Please increase granularity
+                                                    or reduce time period to
+                                                    continue!
+                                                </h2>
+                                            )}
+                                        </div>
+                                        {recordsRequested <= MAX_RECORDS && (
+                                            <h1
+                                                className="continue"
+                                                onClick={handleContinue}
+                                            >
+                                                Continue
+                                            </h1>
+                                        )}
+                                    </>
+                                )}
+                            </>
                         )}
                     </AnimatePresence>
                 </>

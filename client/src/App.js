@@ -1,11 +1,18 @@
 import "./App.css";
 import React from "react";
 import { SelectPage } from "./Pages/SelectPage";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { AnalysisPage } from "./Pages/AnalysisPage";
 
 function App() {
     return (
         <div>
-                <SelectPage key={"Select"} />
+            <BrowserRouter>
+                <Routes>
+                    <Route exact path="/" element={<SelectPage />} />
+                    <Route exact path="/analysis" element={<AnalysisPage />} />
+                </Routes>
+            </BrowserRouter>
         </div>
     );
 }
