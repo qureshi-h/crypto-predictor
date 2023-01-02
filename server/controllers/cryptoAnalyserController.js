@@ -13,11 +13,11 @@ exports.analyseCoin = async (req, res) => {
             end_date,
         ]);
 
-        console.log(coin, granularity, start_date, end_date);
+        console.log(`${stdout}`);
 
         res.status(200).json({
             status_code: 200,
-            pdf: `${stdout}`,
+            analysis: JSON.parse(`${stdout}`),
             error: `${stderr}`,
         });
     } catch (error) {

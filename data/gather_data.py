@@ -14,8 +14,6 @@ def gather_data(coin, currency, granularity, start_time, end_time):
     
     "TODO: Implement error handling"
 
-    print(coin, currency, granularity, start_time, end_time)
-
     code = f'{coin}/{currency}'
 
     end_time = min(end_time, round(time.time() * 1000000))
