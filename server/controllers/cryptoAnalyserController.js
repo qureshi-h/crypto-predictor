@@ -2,7 +2,14 @@ const { spawnSync } = require("child_process");
 
 exports.analyseCoin = async (req, res) => {
     try {
-        const { coin, granularity, start_date, end_date } = req.body;
+        const {
+            coin,
+            granularity,
+            start_date,
+            end_date,
+            threshold_x,
+            threshold_y,
+        } = req.body;
 
         const script = "../analysis/analysis.py";
         const { stdout, stderr } = spawnSync("python3", [
@@ -11,9 +18,9 @@ exports.analyseCoin = async (req, res) => {
             granularity,
             start_date,
             end_date,
+            threshold_x,
+            threshold_y,
         ]);
-
-        console.log(`${stdout}`);
 
         res.status(200).json({
             status_code: 200,

@@ -1,5 +1,10 @@
 import pandas as pd
 from matplotlib import pyplot as plt
+from numpy.polynomial.polynomial import polyfit
+from numpy import array, arange
+
+import warnings
+warnings.filterwarnings("ignore")
 
 
 def find_poi(data):
@@ -98,78 +103,95 @@ def combine_minimums(minimums, threshold=0.2):
     return combined_minimas[1:]
 
 
-def plot(data, minimums, maximums, treadlines=True, levels=True):
-
-    data.plot()
+def plot(data, minimums, maximums, directory, name_prefix=""):
     
-    if levels:
-        plot_points(data, minimums, maximums)
-    
-    if treadlines:
-        plot_treadlines(maximums)
+    """
+    plots and saves the data points, data points + r/s levels, 
+    and data points + r/s levels + trendline
+    """
 
-    plt.show()
+    figure, ax = plt.subplots()
+        
+    ax.plot(arange(0, data.shape[0], 1), data)
+    figure.savefig(f'{directory}{name_prefix}historical.png')
+
+    plot_levels(data, minimums, maximums, ax)
+    figure.savefig(f'{directory}{name_prefix}levels.png')
+
+    plot_trendlines(maximums, ax)
+    figure.savefig(f'{directory}{name_prefix}trendlines.png')
 
         
-def plot_points(df, minimums, maximums):
+        
+def plot_levels(df, minimums, maximums, ax):
 
     '''
-    plots the data points as well as the resistance and support levels
+    plots the resistance and support levels
     '''
 
     minimums[-1][2] = maximums[-1][2] = df.shape[0]
 
     for minima in minimums:
-        plt.hlines(minima[0], minima[1], minima[2], colors="red")
+        ax.hlines(minima[0], minima[1], minima[2], colors="red")
     for maxima in maximums:
-        plt.hlines(maxima[0], maxima[1], maxima[2], colors="green")
+        ax.hlines(maxima[0], maxima[1], maxima[2], colors="green")
+        
+
+def plot_trendlines(maximums, ax):
+    
+    """
+    find and plots the trendline
+    """
+
+    x = array([x[3] for x in maximums])
+    y = array([y[0] for y in maximums])
+    
+    b, m = polyfit(x, y, 1)
+        
+    ax.plot(x, b + float(m) * x, linestyle='dashed', color="purple")
+    
 
 
-def find_support_resistance(data):
+def find_support_resistance(data, threshold_x, threshold_y, directory):
 
     '''
-    find the resistance and support levels
+    finds and plots the resistance and support levels
     '''
 
-    threshold = 0.22
     minimums, maximums = find_poi(data)
 
-    combined_minimums = combine_minimums(minimums, threshold)
-    combined_maximums = combine_maximums(maximums, threshold)
+    combined_maximums = combine_maximums(maximums, threshold_x)
+    combined_minimums = combine_minimums(minimums, threshold_y)
+
+    plot(data, combined_minimums, combined_maximums, directory)  # plot the unoptimised version
 
     min_len = min(len(combined_minimums), len(combined_maximums))
     while len(combined_maximums) > min_len:
-        threshold += 0.001
-        combined_maximums = combine_maximums(combined_maximums, threshold)
+        threshold_x = threshold_x + 0.001
+        combined_maximums = combine_maximums(combined_maximums, threshold_x)
         if len(combined_maximums) < 2:
-            print("oops")
-            combined_maximums = combine_maximums(combined_maximums, threshold - 0.001)
+            combined_maximums = combine_maximums(combined_maximums, threshold_x)
             break
 
     min_len = min(len(combined_minimums), len(combined_maximums))
 
     while len(combined_minimums) > min_len:
-        threshold += 0.01
-        combined_minimums = combine_minimums(minimums, threshold)
+        threshold_y += 0.01
+        combined_minimums = combine_minimums(minimums, threshold_y)
         if len(combined_minimums) < 2:
-            combined_minimums = combine_minimums(combined_minimums, threshold - 0.001)
+            combined_minimums = combine_minimums(combined_minimums, threshold_y)
             break
 
-    print(threshold)
-    plot(data, combined_minimums, combined_maximums, True, False)
+    plot(data, combined_minimums, combined_maximums, directory, "optimised-")  # plot the optimised version
     
-
-
-def plot_treadlines(maximums):
-
-    plt.plot([x[3] for x in maximums], [y[0] for y in maximums], color='hotpink', linestyle='dashed')
+    # plt.show() for testing only
 
 
 if __name__ == "__main__":
 
-    df = pd.read_csv("BTC_last_90_days.csv", header=0)
+    df = pd.read_csv("last_365_days.csv", header=0)
 
     df = df.sort_values(by="date").reset_index()
     df = df["close"]
 
-    find_support_resistance(df)
+    find_support_resistance(df, 0.2, 0.2, "./")
