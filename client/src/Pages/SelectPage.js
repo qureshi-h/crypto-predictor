@@ -33,6 +33,7 @@ export const SelectPage = () => {
 
     const handleBack = () => {
         setState(state - 1);
+        setshowMessage(false)
     };
 
     const handleDone = () => {
@@ -68,8 +69,8 @@ export const SelectPage = () => {
             state: {
                 coin: coins[currentCoin],
                 granularity: GRANULARITIES[granularity],
-                start_date: selectedStart.getTime(),
-                end_date: selectedEnd.getTime(),
+                start_date: selectedStart,
+                end_date: selectedEnd,
             },
         });
     };

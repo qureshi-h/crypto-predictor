@@ -22,6 +22,9 @@ exports.analyseCoin = async (req, res) => {
             threshold_y,
         ]);
 
+        console.log(`${stdout}`);
+        console.log(`${stderr}`);
+
         res.status(200).json({
             status_code: 200,
             analysis: JSON.parse(`${stdout}`),
