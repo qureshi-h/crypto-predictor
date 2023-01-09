@@ -35,9 +35,11 @@ find_support_resistance(data["close"], threshold_x, threshold_y, f'{DIRECTORY}')
 output["support_resistance"] = [f'{DIRECTORY[2:]}historical', 
                                 f'{DIRECTORY[2:]}levels', 
                                 f'{DIRECTORY[2:]}trendline', 
+                                f'{DIRECTORY[2:]}both', 
                                 f'{DIRECTORY[2:]}optimised-historical', 
                                 f'{DIRECTORY[2:]}optimised-levels', 
-                                f'{DIRECTORY[2:]}optimised-trendline']
+                                f'{DIRECTORY[2:]}optimised-trendline',
+                                f'{DIRECTORY[2:]}optimised-both']
 
 
 print(json.dumps(output))

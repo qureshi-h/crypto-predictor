@@ -115,20 +115,33 @@ def plot(data, minimums, maximums, directory, name_prefix=""):
     axes_color = "white"
     
     figure, ax = plt.subplots(facecolor=plot_colour)
+    figure2, ax2 = plt.subplots(facecolor=plot_colour)
+    
+    
     ax.set_facecolor(plot_colour)
     
     ax.spines['bottom'].set_color(axes_color)
     ax.spines['left'].set_color(axes_color)
     ax.tick_params(axis='x', colors=axes_color)
     ax.tick_params(axis='y', colors=axes_color)
-        
+    
+    ax2.set_facecolor(plot_colour)
+    
+    ax2.spines['bottom'].set_color(axes_color)
+    ax2.spines['left'].set_color(axes_color)
+    ax2.tick_params(axis='x', colors=axes_color)
+    ax2.tick_params(axis='y', colors=axes_color)
+    
     ax.plot(arange(0, data.shape[0], 1), data, color="#00ffff")
+    ax2.plot(arange(0, data.shape[0], 1), data, color="#00ffff")
     figure.savefig(f'{directory}{name_prefix}historical.png')
 
     plot_levels(data, minimums, maximums, ax)
     figure.savefig(f'{directory}{name_prefix}levels.png')
 
     plot_trendlines(maximums, ax)
+    plot_trendlines(maximums, ax2)
+    figure.savefig(f'{directory}{name_prefix}both.png')
     figure.savefig(f'{directory}{name_prefix}trendlines.png')
 
         
