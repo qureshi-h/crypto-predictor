@@ -110,9 +110,19 @@ def plot(data, minimums, maximums, directory, name_prefix=""):
     and data points + r/s levels + trendline
     """
 
-    figure, ax = plt.subplots()
+    plot_colour = "#0a041e"
+    axes_color = "#00ffff"
+    axes_color = "white"
+    
+    figure, ax = plt.subplots(facecolor=plot_colour)
+    ax.set_facecolor(plot_colour)
+    
+    ax.spines['bottom'].set_color(axes_color)
+    ax.spines['left'].set_color(axes_color)
+    ax.tick_params(axis='x', colors=axes_color)
+    ax.tick_params(axis='y', colors=axes_color)
         
-    ax.plot(arange(0, data.shape[0], 1), data)
+    ax.plot(arange(0, data.shape[0], 1), data, color="#00ffff")
     figure.savefig(f'{directory}{name_prefix}historical.png')
 
     plot_levels(data, minimums, maximums, ax)
@@ -184,7 +194,7 @@ def find_support_resistance(data, threshold_x, threshold_y, directory):
 
     plot(data, combined_minimums, combined_maximums, directory, "optimised-")  # plot the optimised version
     
-    # plt.show() for testing only
+    # plt.show() #for testing only
 
 
 if __name__ == "__main__":
@@ -194,4 +204,4 @@ if __name__ == "__main__":
     df = df.sort_values(by="date").reset_index()
     df = df["close"]
 
-    find_support_resistance(df, 0.2, 0.2, "./")
+    find_support_resistance(df, 0.17, 0.17, "./")
