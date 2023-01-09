@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { PlotDisplay } from "../Components/PlotDisplay";
 import TechnicalIndicatorDisplay from "../Components/TechnicalIndicatorDisplay";
 
 const getDate = (date) => {
@@ -14,7 +15,6 @@ const getDate = (date) => {
 };
 
 const getLabelMultiplier = (granularity) => {
-    console.log(granularity);
     switch (granularity) {
         case 60:
             return { label: "minutes", multiplier: 1 };
@@ -22,7 +22,7 @@ const getLabelMultiplier = (granularity) => {
             return { label: "minutes", multiplier: 5 };
         case 900:
             return { label: "minutes", multiplier: 15 };
-        case 60:
+        case 3600:
             return { label: "hours", multiplier: 1 };
         case 21600:
             return { label: "hours", multiplier: 6 };
@@ -33,8 +33,8 @@ const getLabelMultiplier = (granularity) => {
 
 export const AnalysisPage = () => {
     const { coin, granularity, start_date, end_date } = useLocation().state;
-    const [thresholdX, setThresholdX] = React.useState(0.2);
-    const [thresholdY, setThresholdY] = React.useState(0.2);
+    const [thresholdX, setThresholdX] = React.useState(0.15);
+    const [thresholdY, setThresholdY] = React.useState(0.15);
     const [data, setData] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
 
@@ -59,27 +59,42 @@ export const AnalysisPage = () => {
                 { 200: [16996.87, 310.26] },
             ],
 
-            support_resistance: {
-                historical:
-                    "./plots/17eeccf9-a0f7-4a96-9e31-57cfac9a3c5d-historical",
-                levels: "./plots/17eeccf9-a0f7-4a96-9e31-57cfac9a3c5d-levels",
-                trendline:
-                    "./plots/17eeccf9-a0f7-4a96-9e31-57cfac9a3c5d-trendline",
-                optimised_historical:
-                    "./plots/17eeccf9-a0f7-4a96-9e31-57cfac9a3c5d-optimised-historical",
-                optimised_levels:
-                    "./plots/17eeccf9-a0f7-4a96-9e31-57cfac9a3c5d-optimised-levels",
-                optimised_trendlines:
-                    "./plots/17eeccf9-a0f7-4a96-9e31-57cfac9a3c5d-optimised-trendlines",
-            },
+            support_resistance: [
+                "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-historical",
+                "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-levels",
+                "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-trendlines",
+                "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-historical",
+                "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-levels",
+                "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-trendlines",
+            ],
+            id: "1851b6d5-5572-496e-8e48-6cdbe72249a3",
             error: "",
             status_code: 200,
         });
         setLoading(false);
     }, []);
 
+    const handleReRun = () => {
+        fetch("http://localhost:5001/analyse/reRun", {
+            method: "POST",
+            headers: new Headers({
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            }),
+            body: JSON.stringify({
+                id: data["id"],
+                threshold_x: thresholdX,
+                threshold_y: thresholdY,
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                // setData(data);
+            });
+    }
+
     const getData = () => {
-        fetch("http://localhost:5001/analyse/", {
+        fetch("http://localhost:5001/analyse/getAnalysis", {
             method: "POST",
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -96,8 +111,7 @@ export const AnalysisPage = () => {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
-                setData(data);
+                // setData(data);
             });
     };
 
@@ -110,20 +124,33 @@ export const AnalysisPage = () => {
                             {coin} ({getDate(start_date)} - {getDate(end_date)})
                         </h4>
                     </div>
-                    <TechnicalIndicatorDisplay
+                    {/* <TechnicalIndicatorDisplay
+                        key="SMA"
                         data={data["SMA"]}
                         granularityLabel={getLabelMultiplier(granularity)}
-                        title="SMA"
+                        title="Simple Moving Average"
                         info="is calculated simply as the mean of the price values
                         over the specified window period"
                     />
 
                     <TechnicalIndicatorDisplay
+                        key="EMA"
                         data={data["EMA"]}
                         granularityLabel={getLabelMultiplier(granularity)}
-                        title="EMA"
+                        title="Exponential Moving Average"
                         info="is calculated simply as the mean of the price values
                         over the specified window period"
+                    /> */}
+
+                    <PlotDisplay
+                        {...{
+                            plots: data["support_resistance"],
+                            thresholdX,
+                            setThresholdX,
+                            thresholdY,
+                            setThresholdY,
+                            handleReRun
+                        }}
                     />
                 </div>
             )}

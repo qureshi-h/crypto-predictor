@@ -36,3 +36,27 @@ exports.analyseCoin = async (req, res) => {
         });
     }
 };
+
+exports.reRun = async (req, res) => {
+    try {
+        const { id, threshold_x, threshold_y } = req.body;
+
+        const script = "../analysis/rerun.py";
+        const { stdout, stderr } = spawnSync("python3", [
+            script,
+            id,
+            threshold_x,
+            threshold_y,
+        ]);
+        console.log("done");
+        res.status(200).json({
+            status_code: 200,
+            // analysis: JSON.parse(`${stdout}`),
+            error: `${stderr}`,
+        });
+    } catch (error) {
+        res.status(400).json({
+            status_message: error.message,
+        });
+    }
+};

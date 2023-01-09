@@ -3,6 +3,7 @@ var router = express.Router();
 
 const analyserController = require("../controllers/cryptoAnalyserController");
 
-router.post("/analyse", analyserController.analyseCoin);
+router.post("/getAnalysis", analyserController.analyseCoin);
+router.post("/reRun", analyserController.reRun);
 
 module.exports = router;

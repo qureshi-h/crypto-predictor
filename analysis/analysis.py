@@ -12,28 +12,32 @@ from support_resistance_finder import find_support_resistance
 
 
 WINDOWS = [5, 10, 25, 50, 100, 200]
-DIRECTORY = f"./plots/{uuid.uuid4()}-"
+ID = str(uuid.uuid4())
+DIRECTORY = f"./plots/{ID}-"
 
 coin = sys.argv[1]
 granularity = int(sys.argv[2])
 start_time = round(int(sys.argv[3]) / 1000) # gather data requires unix in seconds
 end_time = round(int(sys.argv[4]) / 1000)
-threshold_x = float(sys.argv[4])
-threshold_y = float(sys.argv[5])
-
-data = gather_data(coin, "USD", granularity, start_time, end_time)
+threshold_x = float(sys.argv[5])
+threshold_y = float(sys.argv[6])
 
 output = dict()
+output["id"] = ID
+
+data = gather_data(coin, "USD", granularity, start_time, end_time)
+data.to_csv(f"{DIRECTORY}.csv", index=False)
 
 output["SMA"] = SMA(data["close"], WINDOWS)
 output["EMA"] = EMA(data["close"], WINDOWS)
 
-find_support_resistance(data["close"], threshold_x, threshold_y, DIRECTORY)
-output["support_resistance"] = {"historical": f'{DIRECTORY}historical', 
-                                "levels": f'{DIRECTORY}levels', 
-                                "trendline": f'{DIRECTORY}trendline', 
-                                "optimised_historical": f'{DIRECTORY}optimised-historical', 
-                                "optimised_levels": f'{DIRECTORY}optimised-levels', 
-                                "optimised_trendline": f'{DIRECTORY}optimised-trendline'}
+find_support_resistance(data["close"], threshold_x, threshold_y, f'{DIRECTORY}')
+output["support_resistance"] = [f'{DIRECTORY[2:]}historical', 
+                                f'{DIRECTORY[2:]}levels', 
+                                f'{DIRECTORY[2:]}trendline', 
+                                f'{DIRECTORY[2:]}optimised-historical', 
+                                f'{DIRECTORY[2:]}optimised-levels', 
+                                f'{DIRECTORY[2:]}optimised-trendline']
+
 
 print(json.dumps(output))

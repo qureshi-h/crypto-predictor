@@ -17,7 +17,7 @@ app.use(cors());
 app.use("/plots", express.static("plots"));
 
 // define routes
-app.use("/", analyserRoutes);
+app.use("/analyse", analyserRoutes);
 
 app.listen(PORT, function () {
     console.log("CORS-enabled web server listening on port", PORT);

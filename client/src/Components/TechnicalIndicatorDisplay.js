@@ -36,7 +36,7 @@ export default function TechnicalIndicatorDisplay(props) {
                     <div className="analysisInfo">
                         <h4
                             style={{
-                                fontSize: "1.3rem",
+                                fontSize: "1.2rem",
                                 color: "white",
 
                                 padding: "1rem",
