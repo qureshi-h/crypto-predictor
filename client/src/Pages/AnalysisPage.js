@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { LoadingScreen } from "../Components/LoadingScreen";
 import { PlotDisplay } from "../Components/PlotDisplay";
 import TechnicalIndicatorDisplay from "../Components/TechnicalIndicatorDisplay";
 
@@ -13,6 +14,21 @@ const getDate = (date) => {
         date.getFullYear(),
     ].join("/");
 };
+
+const TI = [
+    {
+        key: "SMA",
+        title: "Simple Moving Average",
+        info:
+            "is calculated simply as the mean of the price values over the specified window period",
+    },
+    {
+        key: "EMA",
+        title: "Exponential Moving Average",
+        info:
+            "is calculated simply as the mean of the price values over the specified window period",
+    },
+];
 
 const getLabelMultiplier = (granularity) => {
     switch (granularity) {
@@ -28,6 +44,11 @@ const getLabelMultiplier = (granularity) => {
             return { label: "hours", multiplier: 6 };
         case 84600:
             return { label: "days", multiplier: 1 };
+        default:
+            return {
+                error:
+                    "granularity must be one of 60, 300, 900, 3600, 21600, 84600",
+            };
     }
 };
 
@@ -37,6 +58,10 @@ export const AnalysisPage = () => {
     const [thresholdY, setThresholdY] = React.useState(0.15);
     const [data, setData] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
+
+    const sleep = (milliseconds) => {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds));
+    };
 
     useEffect(() => {
         // getData(coin, granularity, start_date, end_date);
@@ -73,7 +98,9 @@ export const AnalysisPage = () => {
             error: "",
             status_code: 200,
         });
-        setLoading(false);
+        sleep(5000).then(() => {
+            setLoading(false);
+        });
     }, []);
 
     const handleReRun = () => {
@@ -93,7 +120,7 @@ export const AnalysisPage = () => {
             .then((data) => {
                 // setData(data);
             });
-    }
+    };
 
     const getData = () => {
         fetch("http://localhost:5001/analyse/getAnalysis", {
@@ -118,44 +145,60 @@ export const AnalysisPage = () => {
     };
 
     return (
-        <div className="analysis">
-            {!loading && (
-                <div>
-                    <div className="title">
-                        <h4 style={{ fontSize: "2rem", color: "white" }}>
-                            {coin} ({getDate(start_date)} - {getDate(end_date)})
-                        </h4>
-                    </div>
-                    {/* <TechnicalIndicatorDisplay
-                        key="SMA"
-                        data={data["SMA"]}
-                        granularityLabel={getLabelMultiplier(granularity)}
-                        title="Simple Moving Average"
-                        info="is calculated simply as the mean of the price values
-                        over the specified window period"
-                    />
-
-                    <TechnicalIndicatorDisplay
-                        key="EMA"
-                        data={data["EMA"]}
-                        granularityLabel={getLabelMultiplier(granularity)}
-                        title="Exponential Moving Average"
-                        info="is calculated simply as the mean of the price values
-                        over the specified window period"
-                    /> */}
-
-                    <PlotDisplay
-                        {...{
-                            plots: data["support_resistance"],
-                            thresholdX,
-                            setThresholdX,
-                            thresholdY,
-                            setThresholdY,
-                            handleReRun
-                        }}
-                    />
+        <div
+            className="analysis"
+            style={{
+                backgroundBlendMode: loading ? "overlay" : "normal",
+            }}
+        >
+            {loading && <LoadingScreen />}
+            <div
+                style={{
+                    filter: loading ? "brightness(50%)" : "brightness(100%)",
+                }}
+            >
+                <div className="title">
+                    <h4 style={{ fontSize: "2rem", color: "white" }}>
+                        {coin} ({getDate(start_date)} - {getDate(end_date)})
+                    </h4>
                 </div>
-            )}
+
+                <div
+                    style={{
+                        border: "0.01em solid aqua",
+                        width: "90vw",
+                        opacity: "50%",
+                        margin: "7vh 5vw 5vh 5vw",
+                    }}
+                />
+
+                {!loading && (
+                    <>
+                        {TI.map((object) => (
+                            <TechnicalIndicatorDisplay
+                                key={object.key}
+                                data={data[object.key]}
+                                granularityLabel={getLabelMultiplier(
+                                    granularity
+                                )}
+                                title={object.title}
+                                info={object.info}
+                            />
+                        ))}
+
+                        <PlotDisplay
+                            {...{
+                                plots: data["support_resistance"],
+                                thresholdX,
+                                setThresholdX,
+                                thresholdY,
+                                setThresholdY,
+                                handleReRun,
+                            }}
+                        />
+                    </>
+                )}
+            </div>
         </div>
     );
 };

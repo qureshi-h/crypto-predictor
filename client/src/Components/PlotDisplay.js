@@ -10,7 +10,7 @@ export const PlotDisplay = ({
     setThresholdX,
     thresholdY,
     setThresholdY,
-    handleReRun
+    handleReRun,
 }) => {
     const [levels, setLevels] = React.useState(true);
     const [trendline, setTrendline] = React.useState(true);
@@ -84,9 +84,12 @@ export const PlotDisplay = ({
                                 >
                                     <Button
                                         sx={{
-                                            backgroundColor: "orange",
+                                            backgroundColor: "#f05016",
                                             marginTop: "1vh",
                                             textAlign: "center",
+                                            "&:hover": {
+                                                backgroundColor: "brown",
+                                            },
                                         }}
                                         variant="contained"
                                         size={"small"}
@@ -110,13 +113,15 @@ export const PlotDisplay = ({
                         }}
                     >
                         <img
-                            src={
-                                `http://localhost:5001/${plots[
-                                    (trendline ? 2 : levels) +
-                                        (optimised ? 3 : 0)
-                                ]}.png`
-                            }
-                            style={{ width: "100%" }}
+                            src={`http://localhost:5001/${
+                                plots[
+                                    (levels ? 1 : 0) +
+                                        (trendline ? 2 : 0) +
+                                        (optimised ? 4 : 0)
+                                ]
+                            }.png`}
+                            alt="Something Went Wrong!"
+                            style={{ width: "100%", height: "100%" }}
                         />
                     </div>
                 </div>

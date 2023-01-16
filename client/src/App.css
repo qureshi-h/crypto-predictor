@@ -214,6 +214,9 @@ p {
     min-height: 100vh;
     position: absolute;
     padding-bottom: 10vh;
+    background-image: url("./res/analysis-background-d.jpg");
+    background-size: cover;
+    background-repeat: repeat;
 }
 
 .title {

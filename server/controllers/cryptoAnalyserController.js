@@ -48,7 +48,7 @@ exports.reRun = async (req, res) => {
             threshold_x,
             threshold_y,
         ]);
-        console.log("done");
+
         res.status(200).json({
             status_code: 200,
             // analysis: JSON.parse(`${stdout}`),

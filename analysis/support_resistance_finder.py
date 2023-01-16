@@ -142,7 +142,7 @@ def plot(data, minimums, maximums, directory, name_prefix=""):
     plot_trendlines(maximums, ax)
     plot_trendlines(maximums, ax2)
     figure.savefig(f'{directory}{name_prefix}both.png')
-    figure.savefig(f'{directory}{name_prefix}trendlines.png')
+    figure2.savefig(f'{directory}{name_prefix}trendlines.png')
 
         
         
@@ -171,7 +171,7 @@ def plot_trendlines(maximums, ax):
     
     b, m = polyfit(x, y, 1)
         
-    ax.plot(x, b + float(m) * x, linestyle='dashed', color="purple")
+    ax.plot(x, b + float(m) * x, linestyle='dashed', color="yellow")
     
 
 
