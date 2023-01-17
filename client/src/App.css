@@ -248,6 +248,28 @@ p {
     width: 20vw;
 }
 
+.undo {
+    position: absolute;
+    display: flex;
+    width: 30vw;
+    justify-content: right;
+    top: 0;
+    z-index: 1;
+    /* background-color: red; */
+    margin: 3vh 0vw 0 0vw;
+}
+
+.icon, .iconDisabled {
+    margin: 0 0.5vw 0 0.5vw;
+    color: orange;
+    cursor: pointer;
+}
+
+.iconDisabled {
+    cursor: auto;
+    color: grey;
+}
+
 @media screen and (max-width: 1200px) {
     html {
         font-size: 100%;

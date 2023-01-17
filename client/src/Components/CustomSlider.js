@@ -35,11 +35,11 @@ export default function CustomSlider({ value, setValue, label }) {
             >
                 {label}
             </Typography>
-            <Grid container spacing={0} alignItems="center">
+            <Grid container spacing={1} alignItems="center">
                 <Grid item xs>
                     <div
                         style={{
-                            height: "3vh",
+                            // height: "3vh",
                             display: "flex",
                             alignItems: "center",
                         }}
@@ -59,7 +59,7 @@ export default function CustomSlider({ value, setValue, label }) {
                 <Grid item>
                     <div
                         style={{
-                            height: "3vh",
+                            // height: "3vh",
                             display: "flex",
                             alignItems: "center",
                         }}

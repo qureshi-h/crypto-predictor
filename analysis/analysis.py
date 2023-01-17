@@ -32,14 +32,14 @@ output["SMA"] = SMA(data["close"], WINDOWS)
 output["EMA"] = EMA(data["close"], WINDOWS)
 
 find_support_resistance(data["close"], threshold_x, threshold_y, f'{DIRECTORY}')
-output["support_resistance"] = [f'{DIRECTORY[2:]}historical.png', 
+output["support_resistance"] = [[f'{DIRECTORY[2:]}historical.png', 
                                 f'{DIRECTORY[2:]}levels.png', 
                                 f'{DIRECTORY[2:]}trendline.png', 
                                 f'{DIRECTORY[2:]}both.png', 
                                 f'{DIRECTORY[2:]}optimised-historical.png', 
                                 f'{DIRECTORY[2:]}optimised-levels.png', 
                                 f'{DIRECTORY[2:]}optimised-trendline.png',
-                                f'{DIRECTORY[2:]}optimised-both.png']
+                                f'{DIRECTORY[2:]}optimised-both.png']]
 
 
 print(json.dumps(output))

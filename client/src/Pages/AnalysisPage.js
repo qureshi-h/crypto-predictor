@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { LoadingScreen } from "../Components/LoadingScreen";
 import { PlotDisplay } from "../Components/PlotDisplay";
 import TechnicalIndicatorDisplay from "../Components/TechnicalIndicatorDisplay";
+import { motion as m } from "framer-motion/dist/framer-motion";
 
 const getDate = (date) => {
     var mm = date.getMonth() + 1;
@@ -21,12 +22,14 @@ const TI = [
         title: "Simple Moving Average",
         info:
             "is calculated simply as the mean of the price values over the specified window period",
+        initial: { x: "-100vw" },
     },
     {
         key: "EMA",
         title: "Exponential Moving Average",
         info:
             "is calculated simply as the mean of the price values over the specified window period",
+        initial: { x: "100vw" },
     },
 ];
 
@@ -52,12 +55,23 @@ const getLabelMultiplier = (granularity) => {
     }
 };
 
+const container = {
+    hidden: { opacity: 0 },
+    show: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.5,
+        },
+    },
+};
+
 export const AnalysisPage = () => {
     const { coin, granularity, start_date, end_date } = useLocation().state;
     const [thresholdX, setThresholdX] = React.useState(0.15);
     const [thresholdY, setThresholdY] = React.useState(0.15);
     const [data, setData] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
+    const [loadingPlot, setLoadingPlot] = React.useState(false);
 
     const sleep = (milliseconds) => {
         return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -85,25 +99,28 @@ export const AnalysisPage = () => {
             ],
 
             support_resistance: [
-                "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-historical",
-                "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-levels",
-                "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-trendlines",
-                "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-both",
-                "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-historical",
-                "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-levels",
-                "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-trendlines",
-                "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-both",
+                [
+                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-historical.png",
+                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-levels.png",
+                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-trendlines.png",
+                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-both.png",
+                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-historical.png",
+                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-levels.png",
+                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-trendlines.png",
+                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-both.png",
+                ],
             ],
             id: "1851b6d5-5572-496e-8e48-6cdbe72249a3",
             error: "",
             status_code: 200,
         });
-        sleep(5000).then(() => {
+        sleep(50).then(() => {
             setLoading(false);
         });
     }, []);
 
-    const handleReRun = () => {
+    const handleReRun = (currentVersion, setcurrentVersion) => {
+        setLoadingPlot(true);
         fetch("http://localhost:5001/analyse/reRun", {
             method: "POST",
             headers: new Headers({
@@ -117,8 +134,16 @@ export const AnalysisPage = () => {
             }),
         })
             .then((response) => response.json())
-            .then((data) => {
-                // setData(data);
+            .then((response) => {
+                if (response.status_code === 200) {
+                    const newPlots = data["support_resistance"].concat(
+                        response["support_resistance"]
+                    );
+                    setData({ ...data, support_resistance: newPlots });
+                    setLoadingPlot(false);
+                    console.log({ ...data, support_resistance: newPlots });
+                    setcurrentVersion(currentVersion + 1);
+                }
             });
     };
 
@@ -139,7 +164,7 @@ export const AnalysisPage = () => {
             }),
         })
             .then((response) => response.json())
-            .then((data) => {
+            .then((response) => {
                 // setData(data);
             });
     };
@@ -151,7 +176,23 @@ export const AnalysisPage = () => {
                 backgroundBlendMode: loading ? "overlay" : "normal",
             }}
         >
-            {loading && <LoadingScreen />}
+            {loading && (
+                <div
+                    style={{
+                        display: "inline-flex",
+                        width: "100vw",
+                        height: "100vh",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        margin: "-3vh -3vw 0  0",
+
+                        position: "absolute",
+                    }}
+                >
+                    <LoadingScreen />
+                </div>
+            )}
+
             <div
                 style={{
                     filter: loading ? "brightness(50%)" : "brightness(100%)",
@@ -174,28 +215,59 @@ export const AnalysisPage = () => {
 
                 {!loading && (
                     <>
-                        {TI.map((object) => (
-                            <TechnicalIndicatorDisplay
-                                key={object.key}
-                                data={data[object.key]}
-                                granularityLabel={getLabelMultiplier(
-                                    granularity
-                                )}
-                                title={object.title}
-                                info={object.info}
-                            />
-                        ))}
-
-                        <PlotDisplay
-                            {...{
-                                plots: data["support_resistance"],
-                                thresholdX,
-                                setThresholdX,
-                                thresholdY,
-                                setThresholdY,
-                                handleReRun,
-                            }}
-                        />
+                        <m.div
+                            variants={container}
+                            initial="hidden"
+                            animate="show"
+                            key="TI"
+                        >
+                            {TI.map((object) => (
+                                <m.div
+                                    key={object.key}
+                                    transition={{
+                                        ease: "easeOut",
+                                        duration: 0.5,
+                                    }}
+                                    variants={{
+                                        hidden: object.initial,
+                                        show: { x: "0vw" },
+                                    }}
+                                >
+                                    <TechnicalIndicatorDisplay
+                                        key={object.key}
+                                        data={data[object.key]}
+                                        granularityLabel={getLabelMultiplier(
+                                            granularity
+                                        )}
+                                        title={object.title}
+                                        info={object.info}
+                                    />
+                                </m.div>
+                            ))}
+                            <m.div
+                                key="plot"
+                                transition={{
+                                    ease: "easeOut",
+                                    duration: 0.5,
+                                }}
+                                variants={{
+                                    hidden: TI[TI.length - 2].initial,
+                                    show: { x: "0vw" },
+                                }}
+                            >
+                                <PlotDisplay
+                                    {...{
+                                        plots: data["support_resistance"],
+                                        thresholdX,
+                                        setThresholdX,
+                                        thresholdY,
+                                        setThresholdY,
+                                        handleReRun,
+                                        loadingPlot,
+                                    }}
+                                />
+                            </m.div>
+                        </m.div>
                     </>
                 )}
             </div>

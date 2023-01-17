@@ -117,6 +117,9 @@ def plot(data, minimums, maximums, directory, name_prefix=""):
     figure, ax = plt.subplots(facecolor=plot_colour)
     figure2, ax2 = plt.subplots(facecolor=plot_colour)
     
+    area = max(data) - min(data)
+    ax.set_ylim(min(data) - 0.05 * area, max(data) + 0.05 * area)
+    ax2.set_ylim(min(data) - 0.05 * area, max(data) + 0.05 * area)
     
     ax.set_facecolor(plot_colour)
     
@@ -142,7 +145,7 @@ def plot(data, minimums, maximums, directory, name_prefix=""):
     plot_trendlines(maximums, ax)
     plot_trendlines(maximums, ax2)
     figure.savefig(f'{directory}{name_prefix}both.png')
-    figure2.savefig(f'{directory}{name_prefix}trendlines.png')
+    figure2.savefig(f'{directory}{name_prefix}trendline.png')
 
         
         
@@ -166,11 +169,16 @@ def plot_trendlines(maximums, ax):
     find and plots the trendline
     """
 
+    if len(maximums) < 2:
+        return
+    
     x = array([x[3] for x in maximums])
     y = array([y[0] for y in maximums])
     
     b, m = polyfit(x, y, 1)
-        
+    
+    x[-1] = maximums[-1][2]
+    x[0] = x[0] - .3 * x[0]
     ax.plot(x, b + float(m) * x, linestyle='dashed', color="yellow")
     
 

@@ -22,9 +22,6 @@ exports.analyseCoin = async (req, res) => {
             threshold_y,
         ]);
 
-        console.log(`${stdout}`);
-        console.log(`${stderr}`);
-
         res.status(200).json({
             status_code: 200,
             analysis: JSON.parse(`${stdout}`),
@@ -42,16 +39,14 @@ exports.reRun = async (req, res) => {
         const { id, threshold_x, threshold_y } = req.body;
 
         const script = "../analysis/rerun.py";
-        const { stdout, stderr } = spawnSync("python3", [
-            script,
-            id,
-            threshold_x,
-            threshold_y,
-        ]);
+        const { stdout, stderr } = spawnSync(
+            "/Users/hamzaqureshi/miniconda/envs/crypto/bin/python",
+            [script, id, threshold_x, threshold_y]
+        );
 
         res.status(200).json({
             status_code: 200,
-            // analysis: JSON.parse(`${stdout}`),
+            support_resistance: JSON.parse(`${stdout}`),
             error: `${stderr}`,
         });
     } catch (error) {

@@ -3,6 +3,9 @@ import FormGroup from "@mui/material/FormGroup";
 import { CustomCheckbox } from "./CustomCheckbox";
 import CustomSlider from "./CustomSlider";
 import Button from "@mui/material/Button";
+import { LoadingScreen } from "./LoadingScreen";
+import UndoIcon from "@mui/icons-material/Undo";
+import RedoIcon from "@mui/icons-material/Redo";
 
 export const PlotDisplay = ({
     plots,
@@ -11,13 +14,27 @@ export const PlotDisplay = ({
     thresholdY,
     setThresholdY,
     handleReRun,
+    loadingPlot,
 }) => {
     const [levels, setLevels] = React.useState(true);
     const [trendline, setTrendline] = React.useState(true);
-    const [optimised, setOptimised] = React.useState(true);
+    const [optimised, setOptimised] = React.useState(false);
+    const [currentVersion, setcurrentVersion] = React.useState(0);
 
+    const handleRedo = () => {
+        if (currentVersion < plots.length - 1)
+            setcurrentVersion(currentVersion + 1);
+    };
+    const handleUndo = () => {
+        if (currentVersion > 0) setcurrentVersion(currentVersion - 1);
+    };
     return (
-        <div className="analysisTable">
+        <div
+            className="analysisTable"
+            style={{
+                filter: loadingPlot ? "brightness(50%)" : "brightness(100%)",
+            }}
+        >
             <div
                 style={{
                     display: "inline-flex",
@@ -90,11 +107,21 @@ export const PlotDisplay = ({
                                             "&:hover": {
                                                 backgroundColor: "brown",
                                             },
+                                            "&:disabled": {
+                                                backgroundColor: "grey",
+                                            },
                                         }}
                                         variant="contained"
                                         size={"small"}
                                         style={{ marginRight: 0 }}
-                                        onClick={handleReRun}
+                                        onClick={() => {
+                                            handleReRun(
+                                                currentVersion,
+                                                setcurrentVersion
+                                            );
+                                            setOptimised(false);
+                                        }}
+                                        disabled={loadingPlot}
                                     >
                                         Re-Run
                                     </Button>
@@ -114,15 +141,55 @@ export const PlotDisplay = ({
                     >
                         <img
                             src={`http://localhost:5001/${
-                                plots[
+                                plots[currentVersion][
                                     (levels ? 1 : 0) +
                                         (trendline ? 2 : 0) +
                                         (optimised ? 4 : 0)
                                 ]
-                            }.png`}
+                            }`}
                             alt="Something Went Wrong!"
-                            style={{ width: "100%", height: "100%" }}
+                            style={{
+                                width: "30vw",
+                                margin: 0,
+                                display: "block",
+                            }}
                         />
+
+                        <div className="undo">
+                            <UndoIcon
+                                className={`switch ${
+                                    currentVersion === 0
+                                        ? "iconDisabled"
+                                        : "icon"
+                                }`}
+                                onClick={handleUndo}
+                            />
+                            <RedoIcon
+                                className={`switch ${
+                                    currentVersion === plots.length - 1
+                                        ? "iconDisabled"
+                                        : "icon"
+                                }`}
+                                onClick={handleRedo}
+                            />
+                        </div>
+
+                        {loadingPlot && (
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    height: "100%",
+                                    zIndex: 10,
+                                    top: 0,
+                                    width: "30vw",
+                                }}
+                            >
+                                <LoadingScreen />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
