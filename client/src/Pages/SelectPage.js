@@ -7,6 +7,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { AnimatePresence, motion as m } from "framer-motion/dist/framer-motion";
 import { useNavigate } from "react-router-dom";
 import coins from "../res/coins.json";
+import { el } from "date-fns/locale";
 
 const GRANULARITIES = { 0: 60, 1: 300, 2: 900, 3: 3600, 4: 21600, 5: 84600 };
 const MAX_RECORDS = 50 * 300;
@@ -33,7 +34,7 @@ export const SelectPage = () => {
 
     const handleBack = () => {
         setState(state - 1);
-        setshowMessage(false)
+        setshowMessage(false);
     };
 
     const handleDone = () => {
@@ -52,11 +53,21 @@ export const SelectPage = () => {
         setSelectedEnd(date);
         setshowMessage(false);
 
-        if (date) {
+        if (!date) return;
+
+        let endDate = new Date();
+        if (endDate.setHours(0, 0, 0, 0) !== date.setHours(0, 0, 0, 0)) {
+            console.log("hello");
+            endDate.setDate(date.getDate() + 1);
+        } else {
+            endDate = new Date();
+        }
+
+        if (endDate) {
             setshowMessage(true);
             setRecordsRequested(
                 Math.round(
-                    Math.abs(date - selectedStart) /
+                    Math.abs(endDate - selectedStart) /
                         1000 /
                         GRANULARITIES[granularity]
                 )
