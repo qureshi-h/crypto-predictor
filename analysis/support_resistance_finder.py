@@ -9,10 +9,10 @@ warnings.filterwarnings("ignore")
 
 def find_poi(data):
 
-    ''' 
+    """ 
     data is a 1d array consisting of data points
     returns all the local maximas and minimas
-    '''
+    """
     minimums = []
     maximums = []
 
@@ -39,30 +39,31 @@ def find_poi(data):
 
 
 def combine_maximums(maximums, threshold=.2):
-    '''
+    """
     merges nearby maximas into one. 
     higher threshold leads to more distinct maximas
     the maxima object is a 4-tuple, consisting of the 
-    resistance value, start, end, and maximum point in the resistance level
-    '''
+    resistance value, resistance point position, start and end of the resistance level
+    """
     curr_maxima = maximums[0]
     combined_maximas = [[0, 0, 0]]
     span = max(maximums, key=lambda x: x[0])[0] - min(maximums, key=lambda x: x[0])[0]
     for maxima in maximums:
         if abs(maxima[0] - curr_maxima[0]) > threshold * span:
-            combined_maximas.append([curr_maxima[0], combined_maximas[-1][-1], maxima[1], curr_maxima[1]])
+            combined_maximas.append([curr_maxima[0], curr_maxima[1], combined_maximas[-1][-1], maxima[1]])
+
             curr_maxima = maxima
         elif maxima[0] > curr_maxima[0]:
             curr_maxima = maxima
-    combined_maximas.append([curr_maxima[0], combined_maximas[-1][-1], curr_maxima[1], curr_maxima[1]])
+    combined_maximas.append([curr_maxima[0], curr_maxima[1],  combined_maximas[-1][-1], curr_maxima[1]])
 
     i = 1
     while i < len(combined_maximas) - 1:
         if abs(combined_maximas[i][0] - combined_maximas[i + 1][0]) < threshold * span:
-            combined_maximas[i + 1] = [max(combined_maximas[i][0], combined_maximas[i + 1][0]), 
-                                                            combined_maximas[i][1], 
-                                                            combined_maximas[i + 1][2],
-                                                            max(combined_maximas[i], combined_maximas[i + 1], key=lambda x: x[0])[3]]
+            combined_maximas[i + 1] = [max(combined_maximas[i][0], combined_maximas[i + 1][0]),  
+                                       max(combined_maximas[i], combined_maximas[i + 1], key=lambda x: x[0])[1],
+                                       combined_maximas[i][2], 
+                                       combined_maximas[i + 1][3]]
             del combined_maximas[i]
         else:
             i+=1
@@ -72,38 +73,38 @@ def combine_maximums(maximums, threshold=.2):
 
 def combine_minimums(minimums, threshold=0.2):
 
-    '''
+    """
     merges nearby minimas into one. 
     higher threshold leads to more distinct minimas
     the minima object is a 4-tuple, consisting of the 
-    resistance value, start, end, and minimum point in the resistance level
-    '''
+    resistance value, resistance point position, start and end of the resistance level
+    """
 
     curr_minima = minimums[0]
     combined_minimas = [[0, 0, 0, 0]]
     span = max(minimums, key=lambda x: x[0])[0] - min(minimums, key=lambda x: x[0])[0]
     for minima in minimums:
         if abs(minima[0] - curr_minima[0]) > threshold * span / 2:
-            combined_minimas.append([curr_minima[0], combined_minimas[-1][-1], minima[1], curr_minima[1]])
+            combined_minimas.append([curr_minima[0], curr_minima[1], combined_minimas[-1][-1], minima[1]])
             curr_minima = minima
         elif minima[0] < curr_minima[0]:
             curr_minima = minima
-    combined_minimas.append([curr_minima[0], combined_minimas[-1][-1], curr_minima[1], curr_minima[1]])
+    combined_minimas.append([curr_minima[0], curr_minima[1], combined_minimas[-1][-1], curr_minima[1]])
 
     i = 1
     while i < len(combined_minimas) - 1:
         if abs(combined_minimas[i][0] - combined_minimas[i + 1][0]) < threshold * span:
-            combined_minimas[i + 1] = [min(combined_minimas[i][0], combined_minimas[i + 1][0]), 
-                                                            combined_minimas[i][1], 
-                                                            combined_minimas[i + 1][2],
-                                                            min(combined_minimas[i], combined_minimas[i + 1], key=lambda x: x[0])[3]]
+            combined_minimas[i + 1] = [min(combined_minimas[i][0], combined_minimas[i + 1][0]),  
+                                       min(combined_minimas[i], combined_minimas[i + 1], key=lambda x: x[0])[1],
+                                       combined_minimas[i][2],  
+                                       combined_minimas[i + 1][3]]
             del combined_minimas[i]
         else:
             i+=1
     return combined_minimas[1:]
 
 
-def plot(data, minimums, maximums, directory, name_prefix=""):
+def plot(data, minimums, maximums, directory, threshold_x, threshold_y, name_prefix=""):
     
     """
     plots and saves the data points, data points + r/s levels, 
@@ -139,7 +140,7 @@ def plot(data, minimums, maximums, directory, name_prefix=""):
     ax2.plot(arange(0, data.shape[0], 1), data, color="#00ffff")
     figure.savefig(f'{directory}{name_prefix}historical.png')
 
-    plot_levels(data, minimums, maximums, ax)
+    plot_levels(data, minimums, maximums, ax, threshold_x, threshold_y,)
     figure.savefig(f'{directory}{name_prefix}levels.png')
 
     plot_trendlines(maximums, ax)
@@ -149,18 +150,25 @@ def plot(data, minimums, maximums, directory, name_prefix=""):
 
         
         
-def plot_levels(df, minimums, maximums, ax):
+def plot_levels(df, minimums, maximums, ax, threshold_x, threshold_y,):
 
-    '''
+    """
     plots the resistance and support levels
-    '''
+    """
 
-    minimums[-1][2] = maximums[-1][2] = df.shape[0]
+    minimums[-1][2] = maximums[-1][3] = df.shape[0]
+    
+    
+    ax.hlines(minimums[0][0], minimums[0][2], minimums[0][3], colors="red", label=f'at {threshold_y:.2f} sensitivity')
+    ax.hlines(maximums[0][0], maximums[0][2], maximums[0][3], colors="green", label=f'at {threshold_x:.2f} sensitivity')
+    
+    for minima in minimums[1:]:
+        ax.hlines(minima[0], minima[2], minima[3], colors="red")
+    for maxima in maximums[1:]:
+        ax.hlines(maxima[0], maxima[2], maxima[3], colors="green")
+        
+    ax.legend()
 
-    for minima in minimums:
-        ax.hlines(minima[0], minima[1], minima[2], colors="red")
-    for maxima in maximums:
-        ax.hlines(maxima[0], maxima[1], maxima[2], colors="green")
         
 
 def plot_trendlines(maximums, ax):
@@ -172,48 +180,48 @@ def plot_trendlines(maximums, ax):
     if len(maximums) < 2:
         return
     
-    x = array([x[3] for x in maximums])
+    x = array([x[1] for x in maximums])
     y = array([y[0] for y in maximums])
     
     b, m = polyfit(x, y, 1)
     
-    x[-1] = maximums[-1][2]
+    x[-1] = maximums[-1][3]
     x[0] = x[0] - .3 * x[0]
     ax.plot(x, b + float(m) * x, linestyle='dashed', color="yellow")
     
 
-
 def find_support_resistance(data, threshold_x, threshold_y, directory):
 
-    '''
+    """
     finds and plots the resistance and support levels
-    '''
+    """
 
     minimums, maximums = find_poi(data)
 
     combined_maximums = combine_maximums(maximums, threshold_x)
     combined_minimums = combine_minimums(minimums, threshold_y)
 
-    plot(data, combined_minimums, combined_maximums, directory)  # plot the unoptimised version
+    plot(data, combined_minimums, combined_maximums, directory, threshold_x, threshold_y)  # plot the unoptimised version
 
+    optimisation_step = 0.001
     min_len = min(len(combined_minimums), len(combined_maximums))
     while len(combined_maximums) > min_len:
-        threshold_x = threshold_x + 0.001
+        threshold_x = threshold_x + optimisation_step
         combined_maximums = combine_maximums(combined_maximums, threshold_x)
         if len(combined_maximums) < 2:
-            combined_maximums = combine_maximums(combined_maximums, threshold_x)
+            combined_maximums = combine_maximums(combined_maximums, threshold_x - optimisation_step)
             break
 
     min_len = min(len(combined_minimums), len(combined_maximums))
 
     while len(combined_minimums) > min_len:
-        threshold_y += 0.01
+        threshold_y += optimisation_step
         combined_minimums = combine_minimums(minimums, threshold_y)
         if len(combined_minimums) < 2:
-            combined_minimums = combine_minimums(combined_minimums, threshold_y)
+            combined_minimums = combine_minimums(combined_minimums, threshold_y - optimisation_step)
             break
 
-    plot(data, combined_minimums, combined_maximums, directory, "optimised-")  # plot the optimised version
+    plot(data, combined_minimums, combined_maximums, directory, threshold_x, threshold_y,  "optimised-")  # plot the optimised version
     
     # plt.show() #for testing only
 
