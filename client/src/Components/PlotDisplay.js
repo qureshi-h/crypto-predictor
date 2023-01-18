@@ -115,10 +115,7 @@ export const PlotDisplay = ({
                                         size={"small"}
                                         style={{ marginRight: 0 }}
                                         onClick={() => {
-                                            handleReRun(
-                                                currentVersion,
-                                                setcurrentVersion
-                                            );
+                                            handleReRun(setcurrentVersion);
                                             setOptimised(false);
                                         }}
                                         disabled={loadingPlot}

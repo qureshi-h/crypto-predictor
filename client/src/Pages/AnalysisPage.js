@@ -119,7 +119,7 @@ export const AnalysisPage = () => {
         });
     }, []);
 
-    const handleReRun = (currentVersion, setcurrentVersion) => {
+    const handleReRun = (setcurrentVersion) => {
         setLoadingPlot(true);
         fetch("http://localhost:5001/analyse/reRun", {
             method: "POST",
@@ -136,13 +136,13 @@ export const AnalysisPage = () => {
             .then((response) => response.json())
             .then((response) => {
                 if (response.status_code === 200) {
+                    let version = data["support_resistance"].length;
                     const newPlots = data["support_resistance"].concat(
                         response["support_resistance"]
                     );
                     setData({ ...data, support_resistance: newPlots });
                     setLoadingPlot(false);
-                    console.log({ ...data, support_resistance: newPlots });
-                    setcurrentVersion(currentVersion + 1);
+                    setcurrentVersion(version);
                 }
             });
     };
