@@ -259,7 +259,8 @@ p {
     margin: 3vh 0vw 0 0vw;
 }
 
-.icon, .iconDisabled {
+.icon,
+.iconDisabled {
     margin: 0 0.5vw 0 0.5vw;
     color: orange;
     cursor: pointer;
@@ -268,6 +269,14 @@ p {
 .iconDisabled {
     cursor: auto;
     color: grey;
+}
+
+img {
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 @media screen and (max-width: 1200px) {

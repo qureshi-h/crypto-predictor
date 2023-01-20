@@ -18,7 +18,8 @@ def EMA(data, window_size):
         for window in window_size:
             emas = data.ewm(span=int(window), adjust=False).mean()
             predictions.append({int(window): [round(emas.iloc[-1], 2), 
-                                              round(helper_functions.calculate_rmse(data, emas), 2)]})
+                                              round(helper_functions.calculate_rmse(data, emas), 2), 
+                                              round(helper_functions.calculate_mape(data, emas), 2)]})
         return predictions
     
     return TypeError("window size needs to be an integer value or an iterable of integers")

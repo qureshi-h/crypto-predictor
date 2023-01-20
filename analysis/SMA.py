@@ -22,7 +22,8 @@ def SMA(data, window_size):
             else:
                 smas = data.rolling(int(window)).mean().iloc[window:]
                 predictions.append({int(window): [round(smas.iloc[-1], 2), 
-                                                  round(helper_functions.calculate_rmse(data.iloc[window:], smas), 2)]})
+                                                  round(helper_functions.calculate_rmse(data.iloc[window:], smas), 2), 
+                                                  round(helper_functions.calculate_mape(data.iloc[window:], smas), 2)]})
         return predictions
     
     return TypeError("window size needs to be an integer value or an iterable of integers")

@@ -33,6 +33,42 @@ const TI = [
     },
 ];
 
+const testData = {
+    EMA: [
+        { 5: [16561.1, 240.66, 0.79] },
+        { 10: [16611.33, 457.57, 1.66] },
+        { 25: [16807.66, 944.72, 4.14] },
+        { 50: [17395.42, 1480.19, 7.18] },
+        { 100: [18390.48, 2060.43, 10.34] },
+        { 200: [19353.1, 2530.5, 12.75] },
+    ],
+
+    SMA: [
+        { 5: [16556.28, 277.05, 0.84] },
+        { 10: [16624.47, 533.78, 1.84] },
+        { 25: [16730.99, 1203.57, 5.1] },
+        { 50: [17101.45, 1269.14, 7.12] },
+        { 100: ["NaN", "NaN", "NaN"] },
+        { 200: ["NaN", "NaN", "NaN"] },
+    ],
+
+    support_resistance: [
+        [
+            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-historical.png",
+            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-levels.png",
+            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-trendlines.png",
+            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-both.png",
+            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-historical.png",
+            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-levels.png",
+            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-trendlines.png",
+            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-both.png",
+        ],
+    ],
+    id: "1851b6d5-5572-496e-8e48-6cdbe72249a3",
+    error: "",
+    status_code: 200,
+};
+
 const getLabelMultiplier = (granularity) => {
     switch (granularity) {
         case 60:
@@ -69,54 +105,13 @@ export const AnalysisPage = () => {
     const { coin, granularity, start_date, end_date } = useLocation().state;
     const [thresholdX, setThresholdX] = React.useState(0.15);
     const [thresholdY, setThresholdY] = React.useState(0.15);
-    const [data, setData] = React.useState(null);
+    const [data, setData] = React.useState(testData);
     const [loading, setLoading] = React.useState(true);
     const [loadingPlot, setLoadingPlot] = React.useState(false);
 
-    const sleep = (milliseconds) => {
-        return new Promise((resolve) => setTimeout(resolve, milliseconds));
-    };
-
     useEffect(() => {
         // getData(coin, granularity, start_date, end_date);
-        setData({
-            EMA: [
-                { 5: [16862.43, 40.93] },
-                { 10: [16925.18, 65.03] },
-                { 25: [16995.62, 111.04] },
-                { 50: [17009.26, 156.48] },
-                { 100: [17013.96, 200.89] },
-                { 200: [17030.91, 237.53] },
-            ],
-
-            SMA: [
-                { 5: [16837.41, 49.57] },
-                { 10: [16952.72, 77.15] },
-                { 25: [17053.54, 129.83] },
-                { 50: [17006.32, 195.54] },
-                { 100: [16994.23, 262.72] },
-                { 200: [16996.87, 310.26] },
-            ],
-
-            support_resistance: [
-                [
-                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-historical.png",
-                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-levels.png",
-                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-trendlines.png",
-                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-both.png",
-                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-historical.png",
-                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-levels.png",
-                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-trendlines.png",
-                    "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-both.png",
-                ],
-            ],
-            id: "1851b6d5-5572-496e-8e48-6cdbe72249a3",
-            error: "",
-            status_code: 200,
-        });
-        sleep(50).then(() => {
-            setLoading(false);
-        });
+        setLoading(false);
     }, []);
 
     const handleReRun = (setcurrentVersion) => {
@@ -165,7 +160,9 @@ export const AnalysisPage = () => {
         })
             .then((response) => response.json())
             .then((response) => {
-                // setData(data);
+                setData(response["analysis"]);
+                setLoading(false);
+                console.log(response["analysis"]);
             });
     };
 

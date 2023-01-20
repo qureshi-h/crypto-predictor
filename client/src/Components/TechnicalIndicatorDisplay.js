@@ -6,12 +6,14 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
 export default function TechnicalIndicatorDisplay(props) {
-    function createData(window, value, rmse) {
+    function createData(window, value, rmse, mape) {
         let currency = "$";
         window = `${window * props.granularityLabel.multiplier} ${
             props.granularityLabel.label
         }`;
-        return { window, value: `${currency} ${value}`, rmse };
+
+        value = value === "NaN" ? value : `${currency} ${value}`;
+        return { window, value, rmse, mape };
     }
 
     const rows = props.data.map((object) => {
@@ -104,12 +106,18 @@ export default function TechnicalIndicatorDisplay(props) {
                                     >
                                         RMSE
                                     </TableCell>
+                                    <TableCell
+                                        sx={{ color: "white" }}
+                                        align="right"
+                                    >
+                                        MAPE
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {rows.map((row) => (
                                     <TableRow
-                                        key={row.name}
+                                        key={row.window}
                                         sx={{
                                             padding: "1rem",
                                             "td, th": {},
@@ -121,7 +129,6 @@ export default function TechnicalIndicatorDisplay(props) {
                                         <TableCell
                                             sx={{
                                                 color: "white",
-
                                                 textIndent: "0.5vw",
                                             }}
                                             component="th"
@@ -139,7 +146,17 @@ export default function TechnicalIndicatorDisplay(props) {
                                             sx={{ color: "white" }}
                                             align="right"
                                         >
-                                            {row.rmse}
+                                            {(
+                                                Math.round(row.rmse * 100) / 100
+                                            ).toFixed(2)}
+                                        </TableCell>
+                                        <TableCell
+                                            sx={{ color: "white" }}
+                                            align="right"
+                                        >
+                                            {(
+                                                Math.round(row.mape * 100) / 100
+                                            ).toFixed(2)}
                                         </TableCell>
                                     </TableRow>
                                 ))}

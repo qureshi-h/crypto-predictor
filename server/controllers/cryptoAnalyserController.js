@@ -12,15 +12,20 @@ exports.analyseCoin = async (req, res) => {
         } = req.body;
 
         const script = "../analysis/analysis.py";
-        const { stdout, stderr } = spawnSync("python3", [
-            script,
-            coin,
-            granularity,
-            start_date,
-            end_date,
-            threshold_x,
-            threshold_y,
-        ]);
+        const { stdout, stderr } = spawnSync(
+            "/Users/hamzaqureshi/miniconda/envs/crypto/bin/python",
+            [
+                script,
+                coin,
+                granularity,
+                start_date,
+                end_date,
+                threshold_x,
+                threshold_y,
+            ]
+        );
+
+        if (stderr.toString() !== "") throw Error("Error in python script");
 
         res.status(200).json({
             status_code: 200,
@@ -43,6 +48,8 @@ exports.reRun = async (req, res) => {
             "/Users/hamzaqureshi/miniconda/envs/crypto/bin/python",
             [script, id, threshold_x, threshold_y]
         );
+
+        if (stderr.toString() !== "") throw Error("Error in python script");
 
         res.status(200).json({
             status_code: 200,
