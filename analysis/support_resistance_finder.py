@@ -156,7 +156,7 @@ def plot_levels(df, minimums, maximums, ax, threshold_x, threshold_y,):
     plots the resistance and support levels
     """
 
-    minimums[-1][2] = maximums[-1][3] = df.shape[0]
+    minimums[-1][3] = maximums[-1][3] = df.shape[0]
     
     
     ax.hlines(minimums[0][0], minimums[0][2], minimums[0][3], colors="red", label=f'at {threshold_y:.2f} sensitivity')
