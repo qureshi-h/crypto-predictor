@@ -21,9 +21,6 @@ export default function TechnicalIndicatorDisplay(props) {
         let key = Object.keys(object);
         return createData(key, ...object[key]);
     });
-
-    console.log(props);
-
     return (
         <div className="analysisTable">
             <div

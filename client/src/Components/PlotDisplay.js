@@ -7,6 +7,8 @@ import { LoadingScreen } from "./LoadingScreen";
 import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
 
+require("dotenv").config();
+
 export const PlotDisplay = ({
     plots,
     thresholdX,
@@ -137,7 +139,7 @@ export const PlotDisplay = ({
                         }}
                     >
                         <img
-                            src={`http://localhost:5001/${
+                            src={`${process.env.REACT_APP_SERVER_URL}${
                                 plots[currentVersion][
                                     (levels ? 1 : 0) +
                                         (trendline ? 2 : 0) +

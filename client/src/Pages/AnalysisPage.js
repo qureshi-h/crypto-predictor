@@ -8,6 +8,8 @@ import SMA from "../res/SMA.png";
 import EMA from "../res/EMA.png";
 import { Helmet } from "react-helmet";
 
+require("dotenv").config();
+
 const getDate = (date) => {
     var mm = date.getMonth() + 1;
     var dd = date.getDate();
@@ -114,6 +116,7 @@ export const AnalysisPage = () => {
         start_date,
         end_date,
     } = useLocation().state;
+    
     const [thresholdX, setThresholdX] = React.useState(0.15);
     const [thresholdY, setThresholdY] = React.useState(0.15);
     const [data, setData] = React.useState(testData);
@@ -121,13 +124,13 @@ export const AnalysisPage = () => {
     const [loadingPlot, setLoadingPlot] = React.useState(false);
 
     useEffect(() => {
-        // getData(coin, granularity, start_date, end_date);
-        setLoading(false);
+        getData(coin, granularity, start_date, end_date);
+        // setLoading(false);
     }, []);
 
     const handleReRun = (setcurrentVersion) => {
         setLoadingPlot(true);
-        fetch("http://localhost:5001/analyse/reRun", {
+        fetch(`${process.env.REACT_APP_SERVER_URL}analyse/reRun`, {
             method: "POST",
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -154,7 +157,7 @@ export const AnalysisPage = () => {
     };
 
     const getData = () => {
-        fetch("http://localhost:5001/analyse/getAnalysis", {
+        fetch(`${process.env.REACT_APP_SERVER_URL}analyse/getAnalysis`, {
             method: "POST",
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -173,7 +176,6 @@ export const AnalysisPage = () => {
             .then((response) => {
                 setData(response["analysis"]);
                 setLoading(false);
-                console.log(response["analysis"]);
             });
     };
 
