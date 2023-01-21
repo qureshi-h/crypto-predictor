@@ -5,7 +5,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AnalysisPage } from "./Pages/AnalysisPage";
 
 require("dotenv").config();
-console.log(process.env);
 
 function App() {
     return (

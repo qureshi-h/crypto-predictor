@@ -35,6 +35,7 @@ exports.analyseCoin = async (req, res) => {
     } catch (error) {
         res.status(400).json({
             status_message: error.message,
+            error: `${stderr}`
         });
     }
 };
@@ -59,6 +60,7 @@ exports.reRun = async (req, res) => {
     } catch (error) {
         res.status(400).json({
             status_message: error.message,
+            error: `${stderr}`
         });
     }
 };
