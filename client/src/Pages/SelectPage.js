@@ -77,6 +77,7 @@ export const SelectPage = () => {
         navigate("/analysis", {
             state: {
                 coin: coins[currentCoin],
+                coinName: currentCoin,
                 granularity: GRANULARITIES[granularity],
                 start_date: selectedStart,
                 end_date: selectedEnd,

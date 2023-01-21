@@ -21,6 +21,8 @@ export default function TechnicalIndicatorDisplay(props) {
         return createData(key, ...object[key]);
     });
 
+    console.log(props);
+
     return (
         <div className="analysisTable">
             <div
@@ -38,7 +40,7 @@ export default function TechnicalIndicatorDisplay(props) {
                     <div className="analysisInfo">
                         <h4
                             style={{
-                                fontSize: "1.2rem",
+                                fontSize: "1.1rem",
                                 color: "white",
 
                                 padding: "1rem",
@@ -50,7 +52,7 @@ export default function TechnicalIndicatorDisplay(props) {
 
                         <h4
                             style={{
-                                fontSize: ".9rem",
+                                fontSize: ".85rem",
                                 color: "white",
 
                                 padding: "1rem",
@@ -59,10 +61,21 @@ export default function TechnicalIndicatorDisplay(props) {
                         >
                             {props.info}
                         </h4>
+
+                        <img
+                            src={props.image}
+                            style={{
+                                position: "absolute",
+                                top: "60%",
+                                width: "18vw",
+                                marginTop: "5vh",
+                                marginLeft: "1vw",
+                            }}
+                        />
                     </div>
                     <div
                         style={{
-                            width: "30vw",
+                            width: "35vw",
                             backgroundColor: "rgb(10, 4, 30)",
                             boxShadow: "0px 4px 10px #707070",
                             borderRadius: "0rem 1rem 1rem 0rem",

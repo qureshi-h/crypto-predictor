@@ -251,7 +251,7 @@ p {
 .undo {
     position: absolute;
     display: flex;
-    width: 30vw;
+    width: 35vw;
     justify-content: right;
     top: 0;
     z-index: 1;

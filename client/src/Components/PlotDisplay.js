@@ -50,7 +50,7 @@ export const PlotDisplay = ({
                     <div className="analysisInfo">
                         <h4
                             style={{
-                                fontSize: "1.2rem",
+                                fontSize: "1.1rem",
                                 color: "white",
                                 padding: "1rem",
                                 textAlign: "center",
@@ -129,7 +129,7 @@ export const PlotDisplay = ({
 
                     <div
                         style={{
-                            width: "30vw",
+                            width: "35vw",
                             backgroundColor: "rgb(10, 4, 30)",
                             boxShadow: "0px 4px 10px #707070",
                             borderRadius: "0rem 1rem 1rem 0rem",
@@ -146,7 +146,7 @@ export const PlotDisplay = ({
                             }`}
                             alt="Something Went Wrong!"
                             style={{
-                                width: "30vw",
+                                width: "35vw",
                                 margin: 0,
                                 display: "block",
                             }}

@@ -4,6 +4,8 @@ import { LoadingScreen } from "../Components/LoadingScreen";
 import { PlotDisplay } from "../Components/PlotDisplay";
 import TechnicalIndicatorDisplay from "../Components/TechnicalIndicatorDisplay";
 import { motion as m } from "framer-motion/dist/framer-motion";
+import SMA from "../res/SMA.png";
+import EMA from "../res/EMA.png";
 
 const getDate = (date) => {
     var mm = date.getMonth() + 1;
@@ -21,15 +23,17 @@ const TI = [
         key: "SMA",
         title: "Simple Moving Average",
         info:
-            "is calculated simply as the mean of the price values over the specified window period",
+            "is calculated simply as the mean of the price values over the specified window period:",
         initial: { x: "-100vw" },
+        image: SMA,
     },
     {
         key: "EMA",
         title: "Exponential Moving Average",
         info:
-            "is calculated simply as the mean of the price values over the specified window period",
+            "places a greater weight and significance on the most recent data points. Given smoothing operator, S:",
         initial: { x: "100vw" },
+        image: EMA,
     },
 ];
 
@@ -102,7 +106,13 @@ const container = {
 };
 
 export const AnalysisPage = () => {
-    const { coin, granularity, start_date, end_date } = useLocation().state;
+    const {
+        coin,
+        coinName,
+        granularity,
+        start_date,
+        end_date,
+    } = useLocation().state;
     const [thresholdX, setThresholdX] = React.useState(0.15);
     const [thresholdY, setThresholdY] = React.useState(0.15);
     const [data, setData] = React.useState(testData);
@@ -197,7 +207,7 @@ export const AnalysisPage = () => {
             >
                 <div className="title">
                     <h4 style={{ fontSize: "2rem", color: "white" }}>
-                        {coin} ({getDate(start_date)} - {getDate(end_date)})
+                        {coinName} ({getDate(start_date)} - {getDate(end_date)})
                     </h4>
                 </div>
 
@@ -238,6 +248,7 @@ export const AnalysisPage = () => {
                                         )}
                                         title={object.title}
                                         info={object.info}
+                                        image={object.image}
                                     />
                                 </m.div>
                             ))}

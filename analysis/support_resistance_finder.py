@@ -119,25 +119,23 @@ def plot(data, minimums, maximums, directory, threshold_x, threshold_y, name_pre
     figure2, ax2 = plt.subplots(facecolor=plot_colour)
     
     area = max(data) - min(data)
-    ax.set_ylim(min(data) - 0.05 * area, max(data) + 0.05 * area)
-    ax2.set_ylim(min(data) - 0.05 * area, max(data) + 0.05 * area)
     
-    ax.set_facecolor(plot_colour)
+    for axes in [ax, ax2]:   # setup both axes 
+        axes.set_ylim(min(data) - 0.05 * area, max(data) + 0.05 * area)
+        
+        axes.set_xlabel("Ticks", color="white")
+        axes.set_ylabel("Price (USD)", color="white")
+        
+        axes.set_facecolor(plot_colour)
     
-    ax.spines['bottom'].set_color(axes_color)
-    ax.spines['left'].set_color(axes_color)
-    ax.tick_params(axis='x', colors=axes_color)
-    ax.tick_params(axis='y', colors=axes_color)
-    
-    ax2.set_facecolor(plot_colour)
-    
-    ax2.spines['bottom'].set_color(axes_color)
-    ax2.spines['left'].set_color(axes_color)
-    ax2.tick_params(axis='x', colors=axes_color)
-    ax2.tick_params(axis='y', colors=axes_color)
-    
-    ax.plot(arange(0, data.shape[0], 1), data, color="#00ffff")
-    ax2.plot(arange(0, data.shape[0], 1), data, color="#00ffff")
+        axes.spines['bottom'].set_color(axes_color)
+        axes.spines['left'].set_color(axes_color)
+        
+        axes.tick_params(axis='x', colors=axes_color)
+        axes.tick_params(axis='y', colors=axes_color)
+        
+        axes.plot(arange(0, data.shape[0], 1), data, color="#00ffff")
+
     figure.savefig(f'{directory}{name_prefix}historical.png')
 
     plot_levels(data, minimums, maximums, ax, threshold_x, threshold_y,)
