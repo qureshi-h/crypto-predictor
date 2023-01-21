@@ -49,7 +49,7 @@ exports.reRun = async (req, res) => {
             threshold_y,
         ]);
 
-        if (stderr.toString() !== "") throw Error("Error in python script");
+        if (stderr.toString() !== "") throw Error(stderr.toString());
 
         res.status(200).json({
             status_code: 200,
