@@ -13,7 +13,7 @@ exports.analyseCoin = async (req, res) => {
 
         const script = "../analysis/analysis.py";
         const { stdout, stderr } = spawnSync(
-            "/Users/hamzaqureshi/miniconda/envs/crypto/bin/python",
+            "python3",
             [
                 script,
                 coin,
@@ -45,7 +45,7 @@ exports.reRun = async (req, res) => {
 
         const script = "../analysis/rerun.py";
         const { stdout, stderr } = spawnSync(
-            "/Users/hamzaqureshi/miniconda/envs/crypto/bin/python",
+            "python3",
             [script, id, threshold_x, threshold_y]
         );
 
