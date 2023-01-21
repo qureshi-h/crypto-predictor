@@ -116,7 +116,7 @@ export const AnalysisPage = () => {
         start_date,
         end_date,
     } = useLocation().state;
-    
+
     const [thresholdX, setThresholdX] = React.useState(0.15);
     const [thresholdY, setThresholdY] = React.useState(0.15);
     const [data, setData] = React.useState(testData);
@@ -174,8 +174,12 @@ export const AnalysisPage = () => {
         })
             .then((response) => response.json())
             .then((response) => {
-                setData(response["analysis"]);
-                setLoading(false);
+                if (response.status_code === 200) {
+                    setData(response["analysis"]);
+                    setLoading(false);
+                } else {
+                    console.log(response);
+                }
             });
     };
 
