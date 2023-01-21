@@ -51,7 +51,6 @@ def combine_maximums(maximums, threshold=.2):
     for maxima in maximums:
         if abs(maxima[0] - curr_maxima[0]) > threshold * span:
             combined_maximas.append([curr_maxima[0], curr_maxima[1], combined_maximas[-1][-1], maxima[1]])
-
             curr_maxima = maxima
         elif maxima[0] > curr_maxima[0]:
             curr_maxima = maxima

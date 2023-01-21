@@ -4,6 +4,7 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { InfoToolTip } from "./InfoToolTip";
 
 export default function TechnicalIndicatorDisplay(props) {
     function createData(window, value, rmse, mape) {
@@ -71,6 +72,7 @@ export default function TechnicalIndicatorDisplay(props) {
                                 marginTop: "5vh",
                                 marginLeft: "1vw",
                             }}
+                            alt="Technical Indicator Formula"
                         />
                     </div>
                     <div
@@ -103,7 +105,12 @@ export default function TechnicalIndicatorDisplay(props) {
                                             textAlign: "left",
                                         }}
                                     >
-                                        Window Length
+                                        <>
+                                            Window Length{" "}
+                                            <InfoToolTip
+                                                info={`Number of ${props.granularityLabel.label} data used to calculate projected value`}
+                                            />
+                                        </>
                                     </TableCell>
                                     <TableCell
                                         sx={{
@@ -111,19 +118,30 @@ export default function TechnicalIndicatorDisplay(props) {
                                         }}
                                         align="center"
                                     >
-                                        Next Projected
+                                        <>
+                                            Projected{" "}
+                                            <InfoToolTip
+                                                info={`Project value in the next ${props.granularityLabel.multiplier} ${props.granularityLabel.label}`}
+                                            />
+                                        </>
                                     </TableCell>
                                     <TableCell
                                         sx={{ color: "white" }}
                                         align="right"
                                     >
-                                        RMSE
+                                        <>
+                                            RMSE{" "}
+                                            <InfoToolTip info="Root Mean Sqaured Error" />
+                                        </>
                                     </TableCell>
                                     <TableCell
                                         sx={{ color: "white" }}
                                         align="right"
                                     >
-                                        MAPE
+                                        <>
+                                            MAPE{" "}
+                                            <InfoToolTip info="Mean Absolute Percentage Error" />
+                                        </>
                                     </TableCell>
                                 </TableRow>
                             </TableHead>

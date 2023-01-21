@@ -6,6 +6,7 @@ import TechnicalIndicatorDisplay from "../Components/TechnicalIndicatorDisplay";
 import { motion as m } from "framer-motion/dist/framer-motion";
 import SMA from "../res/SMA.png";
 import EMA from "../res/EMA.png";
+import { Helmet } from "react-helmet";
 
 const getDate = (date) => {
     var mm = date.getMonth() + 1;
@@ -183,6 +184,9 @@ export const AnalysisPage = () => {
                 backgroundBlendMode: loading ? "overlay" : "normal",
             }}
         >
+            <Helmet>
+                <title>Crypto Analyser - {coinName}</title>
+            </Helmet>
             {loading && (
                 <div
                     style={{
