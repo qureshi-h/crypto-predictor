@@ -62,14 +62,14 @@ export const SelectPage = () => {
         }
 
         if (endDate) {
-            setshowMessage(true);
             setRecordsRequested(
                 Math.round(
                     Math.abs(endDate - selectedStart) /
-                        1000 /
-                        GRANULARITIES[granularity]
-                )
-            );
+                    1000 /
+                    GRANULARITIES[granularity]
+                    )
+                    );
+                    setshowMessage(true);
         }
     };
 
