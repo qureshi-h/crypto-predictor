@@ -3,8 +3,8 @@ import json
 import uuid
 
 
-sys.path.insert(1, "../data")
-sys.path.insert(1, "../analysis")
+sys.path.insert(1, "./data")
+sys.path.insert(1, "./analysis")
 
 from support_resistance_finder import find_support_resistance
 import pandas as pd

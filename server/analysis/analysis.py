@@ -2,8 +2,8 @@ import sys
 import json
 import uuid
 
-sys.path.insert(1, "../data")
-sys.path.insert(1, "../analysis")
+sys.path.insert(1, "./data")
+sys.path.insert(1, "./analysis")
 
 from gather_data import gather_data
 from EMA import EMA

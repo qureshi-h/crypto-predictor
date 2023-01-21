@@ -11,7 +11,7 @@ exports.analyseCoin = async (req, res) => {
             threshold_y,
         } = req.body;
 
-        const script = "../analysis/analysis.py";
+        const script = "./analysis/analysis.py";
         const { stdout, stderr } = spawnSync("python3", [
             script,
             coin,
@@ -41,7 +41,7 @@ exports.reRun = async (req, res) => {
     try {
         const { id, threshold_x, threshold_y } = req.body;
 
-        const script = "../analysis/rerun.py";
+        const script = "./analysis/rerun.py";
         const { stdout, stderr } = spawnSync("python3", [
             script,
             id,
