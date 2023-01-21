@@ -27,15 +27,16 @@ exports.analyseCoin = async (req, res) => {
 
         if (stderr.toString() !== "") throw Error("Error in python script");
 
+        console.log(`${stderr}`);
+
         res.status(200).json({
             status_code: 200,
             analysis: JSON.parse(`${stdout}`),
-            error: `${stderr}`,
+
         });
     } catch (error) {
         res.status(400).json({
             status_message: error.message,
-            error: `${stderr}`
         });
     }
 };
@@ -55,12 +56,10 @@ exports.reRun = async (req, res) => {
         res.status(200).json({
             status_code: 200,
             support_resistance: JSON.parse(`${stdout}`),
-            error: `${stderr}`,
         });
     } catch (error) {
         res.status(400).json({
             status_message: error.message,
-            error: `${stderr}`
         });
     }
 };
