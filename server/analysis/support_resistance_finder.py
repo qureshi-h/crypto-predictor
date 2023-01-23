@@ -155,7 +155,6 @@ def plot_levels(df, minimums, maximums, ax, threshold_x, threshold_y,):
 
     minimums[-1][3] = maximums[-1][3] = df.shape[0]
     
-    
     ax.hlines(minimums[0][0], minimums[0][2], minimums[0][3], colors="red", label=f'at {threshold_y:.2f} sensitivity')
     ax.hlines(maximums[0][0], maximums[0][2], maximums[0][3], colors="green", label=f'at {threshold_x:.2f} sensitivity')
     
@@ -225,9 +224,7 @@ def find_support_resistance(data, threshold_x, threshold_y, directory):
 
 if __name__ == "__main__":
 
-    df = pd.read_csv("last_365_days.csv", header=0)
-
-    df = df.sort_values(by="date").reset_index()
+    df = pd.read_csv("test.csv", header=0)
     df = df["close"]
 
     find_support_resistance(df, 0.17, 0.17, "./")

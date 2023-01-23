@@ -1,4 +1,5 @@
 const { spawnSync } = require("child_process");
+require("dotenv").config();
 
 exports.analyseCoin = async (req, res) => {
     try {
@@ -11,9 +12,17 @@ exports.analyseCoin = async (req, res) => {
             threshold_y,
         } = req.body;
 
-        const script = "./analysis/analysis.py";
-        const { stdout, stderr } = spawnSync("python3", [
-            script,
+        const file = "./analysis/analysis.py";
+
+        const python =
+            process.env.MODE === "DEVELOPMENT"
+                ? process.env.PYTHON_ENVIRONMENT
+                    ? process.env.PYTHON_ENVIRONMENT
+                    : process.env.CONDA_PYTHON_EXE
+                : "python3";
+
+        const { stdout, stderr } = spawnSync(python, [
+            file,
             coin,
             granularity,
             start_date,
@@ -22,9 +31,7 @@ exports.analyseCoin = async (req, res) => {
             threshold_y,
         ]);
 
-        if (stderr.toString() !== "") throw Error(stderr.toString());
-
-        console.log(`${stderr}`);
+        if (!stderr || stderr.toString() !== "") throw Error(stderr.toString());
 
         res.status(200).json({
             status_code: 200,
@@ -41,9 +48,16 @@ exports.reRun = async (req, res) => {
     try {
         const { id, threshold_x, threshold_y } = req.body;
 
-        const script = "./analysis/rerun.py";
-        const { stdout, stderr } = spawnSync("python3", [
-            script,
+        const file = "./analysis/rerun.py";
+        const python =
+            process.env.MODE === "DEVELOPMENT"
+                ? process.env.PYTHON_ENVIRONMENT
+                    ? process.env.PYTHON_ENVIRONMENT
+                    : process.env.CONDA_PYTHON_EXE
+                : "python3";
+
+        const { stdout, stderr } = spawnSync(python, [
+            file,
             id,
             threshold_x,
             threshold_y,

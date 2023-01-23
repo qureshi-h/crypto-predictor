@@ -5,7 +5,7 @@ import uuid
 sys.path.insert(1, "./data")
 sys.path.insert(1, "./analysis")
 
-from gather_data import gather_data
+from gather_data import gather_data 
 from EMA import EMA
 from SMA import SMA
 from support_resistance_finder import find_support_resistance

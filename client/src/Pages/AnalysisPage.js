@@ -40,6 +40,8 @@ const TI = [
     },
 ];
 
+// data to be used in development. Run getData once and insert key below
+const testKey = "1851b6d5-5572-496e-8e48-6cdbe72249a3";
 const testData = {
     EMA: [
         { 5: [16561.1, 240.66, 0.79] },
@@ -61,17 +63,17 @@ const testData = {
 
     support_resistance: [
         [
-            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-historical.png",
-            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-levels.png",
-            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-trendlines.png",
-            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-both.png",
-            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-historical.png",
-            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-levels.png",
-            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-trendlines.png",
-            "plots/1851b6d5-5572-496e-8e48-6cdbe72249a3-optimised-both.png",
+            `plots/${testKey}-historical.png`,
+            `plots/${testKey}-levels.png`,
+            `plots/${testKey}-trendlines.png`,
+            `plots/${testKey}-both.png`,
+            `plots/${testKey}-optimised-historical.png`,
+            `plots/${testKey}-optimised-levels.png`,
+            `plots/${testKey}-optimised-trendlines.png`,
+            `plots/${testKey}-optimised-both.png`,
         ],
     ],
-    id: "1851b6d5-5572-496e-8e48-6cdbe72249a3",
+    id: testKey,
     error: "",
     status_code: 200,
 };

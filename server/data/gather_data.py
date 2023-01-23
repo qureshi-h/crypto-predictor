@@ -19,18 +19,18 @@ def gather_data(coin, currency, granularity, start_time, end_time):
     end_time = min(end_time, round(time.time() * 1000000))
     current_start = end_time - RECORDS_LIMIT * granularity
 
-    data = fetch_data(code, granularity, current_start, end_time)
+    data = fetch_data(code, granularity, current_start, end_time).loc[:, ["unix", "close"]]
     end = (data.iloc[-1, 0] - granularity)
     while (end >= start_time):
         current_start = end - RECORDS_LIMIT * granularity
 
-        df2 = fetch_data(code, granularity, current_start, end)
+        df2 = fetch_data(code, granularity, current_start, end).loc[:, ["unix", "close"]]
         data = pd.concat([data, df2], ignore_index=True)
 
         end = data.iloc[-1, 0] - granularity
 
     data[(data["unix"] >= start_time) & (data["unix"] < end_time)].to_csv("test.csv")
-    return data[(data["unix"] >= start_time) & (data["unix"] < end_time)]
+    return data[(data["unix"] >= start_time) & (data["unix"] < end_time)].iloc[::-1]
 
 
 if __name__ == '__main__':
