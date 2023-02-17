@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import { LoadingScreen } from "./LoadingScreen";
 import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
+import { InfoToolTip } from "./InfoToolTip";
 
 require("dotenv").config();
 
@@ -76,21 +77,42 @@ export const PlotDisplay = ({
                                 <CustomCheckbox
                                     value={optimised}
                                     setChecked={setOptimised}
-                                    label="Optimise"
+                                    label={
+                                        <>
+                                            Optimise{" "}
+                                            <InfoToolTip info="Tries to balance the nummber of resistance support levels" />{" "}
+                                        </>
+                                    }
                                 />
                                 <div style={{ marginTop: "3vh" }}>
                                     <CustomSlider
                                         {...{
                                             value: thresholdX,
                                             setValue: setThresholdX,
-                                            label: "Resistance Sensitivity",
+                                            label: (
+                                                <>
+                                                    Resistance Sensitivity{" "}
+                                                    <InfoToolTip
+                                                        info="Controls the difference between distinct resistance levels. 
+                                                        Higher Resistance Sensitivity leads to less number of levels"
+                                                    />{" "}
+                                                </>
+                                            ),
                                         }}
                                     />
                                     <CustomSlider
                                         {...{
                                             value: thresholdY,
                                             setValue: setThresholdY,
-                                            label: "Support Sensitivity",
+                                            label: (
+                                                <>
+                                                    Support Sensitivity{" "}
+                                                    <InfoToolTip
+                                                        info="Controls the difference between distinct support levels. 
+                                                        Higher Support Sensitivity leads to less number of levels"
+                                                    />{" "}
+                                                </>
+                                            ),
                                         }}
                                     />
                                 </div>

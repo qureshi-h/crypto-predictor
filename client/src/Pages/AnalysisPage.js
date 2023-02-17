@@ -27,7 +27,7 @@ const TI = [
         title: "Simple Moving Average",
         info:
             "is calculated simply as the mean of the price values over the specified window period:",
-        initial: { x: "-100vw" },
+        initial: { x: "100vw" },
         image: SMA,
     },
     {
@@ -35,7 +35,7 @@ const TI = [
         title: "Exponential Moving Average",
         info:
             "places a greater weight and significance on the most recent data points. Given smoothing operator, S:",
-        initial: { x: "100vw" },
+        initial: { x: "-100vw" },
         image: EMA,
     },
 ];
@@ -240,6 +240,29 @@ export const AnalysisPage = () => {
                             animate="show"
                             key="TI"
                         >
+                            <m.div
+                                key="plot"
+                                transition={{
+                                    ease: "easeOut",
+                                    duration: 0.5,
+                                }}
+                                variants={{
+                                    hidden: TI[1].initial,
+                                    show: { x: "0vw" },
+                                }}
+                            >
+                                <PlotDisplay
+                                    {...{
+                                        plots: data["support_resistance"],
+                                        thresholdX,
+                                        setThresholdX,
+                                        thresholdY,
+                                        setThresholdY,
+                                        handleReRun,
+                                        loadingPlot,
+                                    }}
+                                />
+                            </m.div>
                             {TI.map((object) => (
                                 <m.div
                                     key={object.key}
@@ -264,29 +287,6 @@ export const AnalysisPage = () => {
                                     />
                                 </m.div>
                             ))}
-                            <m.div
-                                key="plot"
-                                transition={{
-                                    ease: "easeOut",
-                                    duration: 0.5,
-                                }}
-                                variants={{
-                                    hidden: TI[TI.length - 2].initial,
-                                    show: { x: "0vw" },
-                                }}
-                            >
-                                <PlotDisplay
-                                    {...{
-                                        plots: data["support_resistance"],
-                                        thresholdX,
-                                        setThresholdX,
-                                        thresholdY,
-                                        setThresholdY,
-                                        handleReRun,
-                                        loadingPlot,
-                                    }}
-                                />
-                            </m.div>
                         </m.div>
                     </>
                 )}
